@@ -70,11 +70,11 @@ h1,h2,h3{margin:0}
 .cattile:hover{color:var(--ink);transform:translateY(-1px)}
 .cattile .nm{display:block;font-family:var(--display);font-size:27px;font-weight:700;letter-spacing:-0.02em}
 .cattile .sub{font-size:13px;color:#4A4740}
-.cattile.photo{position:relative;overflow:hidden;color:#fff;background-size:cover;background-position:center;min-height:190px;isolation:isolate}
-.cattile.photo::before{content:'';position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(0,0,0,0.10) 0%,rgba(0,0,0,0.25) 40%,rgba(0,0,0,0.78) 100%)}
-.cattile.photo:hover{color:#fff}
-.cattile.photo .nm{text-shadow:0 1px 8px rgba(0,0,0,0.45)}
-.cattile.photo .sub{color:rgba(255,255,255,0.95);text-shadow:0 1px 6px rgba(0,0,0,0.5)}
+.cattile.pic{position:relative;overflow:hidden;color:#fff;background-size:cover;background-position:center;min-height:190px;isolation:isolate}
+.cattile.pic::before{content:'';position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(0,0,0,0.10) 0%,rgba(0,0,0,0.25) 40%,rgba(0,0,0,0.78) 100%)}
+.cattile.pic:hover{color:#fff}
+.cattile.pic .nm{text-shadow:0 1px 8px rgba(0,0,0,0.45)}
+.cattile.pic .sub{color:rgba(255,255,255,0.95);text-shadow:0 1px 6px rgba(0,0,0,0.5)}
 .photo-credit{font-size:12px;color:var(--muted);margin-top:8px}
 .photo-credit a{color:var(--muted)}
 .cattile .ic{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#fff}
@@ -257,6 +257,11 @@ h1,h2,h3{margin:0}
   .photo{aspect-ratio:16/10}
 }
 @media (max-width: 520px){
+  .cats{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .cats .cattile:last-child{grid-column:span 2}
+  .cattile.pic{min-height:150px;padding:14px;gap:14px}
+  .cattile .nm{font-size:22px}
+  .cattile .sub{font-size:12px}
   .listgrid{grid-template-columns:minmax(0,1fr)}
   .bigtile{grid-column:auto}
 }
@@ -268,7 +273,7 @@ h1,h2,h3{margin:0}
   <div class="in">
     <a class="logo" href="#home">wander<span>.</span>sg</a>
     <nav class="mainnav" aria-label="Categories">
-      <a href="#eat">Eat</a><a href="#see">See</a><a href="#shop">Shop</a><a href="#events">Events</a><a href="#do">Do &amp; Outdoors</a><a href="#explore">Map</a><a href="#lists">Lists</a>
+      <a href="#eat">Eat</a><a href="#see">See</a><a href="#shop">Shop</a><a href="#events">Events</a><a href="#do">Activities</a><a href="#explore">Map</a><a href="#lists">Lists</a>
     </nav>
     <label class="near"><span class="lbl">Near</span><span class="sr">Your area, used for distances</span><select id="nearSel"></select></label>
     <a class="iconbtn hdr-search" href="#search" aria-label="Search"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></a>
@@ -324,7 +329,7 @@ const CATS = {
   see:{name:'See',sub:'Museums, landmarks, heritage',color:'#1D4ED8',tint:'#DDE6FB'},
   shop:{name:'Shop',sub:'Malls, markets, indie streets',color:'#7C3AED',tint:'#EBE2FB'},
   events:{name:'Events',sub:'Concerts, markets, exhibitions',color:'#BE185D',tint:'#F9DDEA'},
-  do:{name:'Do & Outdoors',sub:'Parks, trails, beaches, activities',color:'#15803D',tint:'#D9F0DF'}
+  do:{name:'Activities',sub:'Parks, trails, beaches, outdoor fun',color:'#15803D',tint:'#D9F0DF'}
 };
 const SUBS = {
   eat:[['hawker','Hawker centres'],['cafe','Cafés'],['restaurant','Restaurants'],['bar','Bars']],
@@ -689,7 +694,7 @@ function ratingHtml(it){
 function metaHtml(it){
   const C = CATS[it.c];
   const when = it.kind==='event' ? `${it.start.getTime()===it.end.getTime()?fmtD(it.start):fmtD(it.start)+' – '+fmtD(it.end)} · ${esc(it.time)} · ` : '';
-  return `<span class="c" style="color:${C.color}">${esc(C.name==='Do & Outdoors'?'Outdoors':C.name)}</span> · ${when}${esc(it.type)} · ${esc(it.a)} · ${dist(it).toFixed(1)} km`;
+  return `<span class="c" style="color:${C.color}">${esc(C.name)}</span> · ${when}${esc(it.type)} · ${esc(it.a)} · ${dist(it).toFixed(1)} km`;
 }
 function tagsHtml(it){
   const t = [];
@@ -859,7 +864,7 @@ function renderHome(){
       ${examplesHtml()}
     </section>
     <section class="cats" aria-label="Categories">
-      ${Object.entries(CATS).map(([k,C]) => `<a class="cattile photo" href="#${k}" style="${photoStyle(k)}"><span class="ic" style="background:${C.color}">${icon(k,22)}</span><span><span class="nm">${esc(C.name)}</span><span class="sub">${esc(C.sub)} · ${counts[k].toLocaleString()}</span></span></a>`).join('')}
+      ${Object.entries(CATS).map(([k,C]) => `<a class="cattile pic" href="#${k}" style="${photoStyle(k)}"><span class="ic" style="background:${C.color}">${icon(k,22)}</span><span><span class="nm">${esc(C.name)}</span><span class="sub">${esc(C.sub)} · ${counts[k].toLocaleString()}</span></span></a>`).join('')}
     </section>
     ${photoCredit()}
     <section class="sec" aria-label="Collections">
@@ -1042,7 +1047,7 @@ function renderSearchLanding(){
     ${searchForm('', true)}
     ${examplesHtml()}
   </section>
-  <section class="cats" aria-label="Categories">${Object.entries(CATS).map(([k,C]) => `<a class="cattile photo" href="#${k}" style="${photoStyle(k)};min-height:130px"><span class="ic" style="background:${C.color}">${icon(k,22)}</span><span class="nm">${esc(C.name)}</span></a>`).join('')}</section>${photoCredit()}</div>`;
+  <section class="cats" aria-label="Categories">${Object.entries(CATS).map(([k,C]) => `<a class="cattile pic" href="#${k}" style="${photoStyle(k)};min-height:130px"><span class="ic" style="background:${C.color}">${icon(k,22)}</span><span class="nm">${esc(C.name)}</span></a>`).join('')}</section>${photoCredit()}</div>`;
   bindSearchForms();
 }
 
