@@ -125,6 +125,84 @@ def slug(s):
 
 TODAY = dt.date.today()
 
+# ---------------------------------------------------------------- opening hours
+DAYS = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"]
+
+def _days(spec):
+    out = set()
+    for part in spec.split(","):
+        part = part.strip()
+        if part == "PH" or part == "SH":
+            continue
+        if "-" in part:
+            a, b = part.split("-", 1)
+            if a not in DAYS or b not in DAYS: raise ValueError(part)
+            i, j = DAYS.index(a), DAYS.index(b)
+            rng = list(range(i, j + 1)) if i <= j else list(range(i, 7)) + list(range(0, j + 1))
+            out.update(rng)
+        elif part in DAYS:
+            out.add(DAYS.index(part))
+        else:
+            raise ValueError(part)
+    return out
+
+def _mins(t):
+    h, m = t.split(":")
+    v = int(h) * 60 + int(m)
+    if not (0 <= v <= 48 * 60): raise ValueError(t)
+    return v
+
+def parse_hours(raw):
+    """OSM opening_hours -> 7 lists (Mon..Sun) of [open_min, close_min]; close may exceed 1440 (past midnight).
+    Returns None when the text uses syntax we don't support (the raw text is still shown)."""
+    raw = (raw or "").strip()
+    if not raw: return None
+    if raw == "24/7": return [[[0, 1440]] for _ in range(7)]
+    if re.search(r'[\[\]"]|sunrise|sunset|week|Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec|\+|\|\|', raw):
+        return None
+    week = [None] * 7
+    try:
+        for rule in [r.strip() for r in raw.split(";") if r.strip()]:
+            m = re.match(r"^((?:(?:Mo|Tu|We|Th|Fr|Sa|Su|PH|SH)(?:-(?:Mo|Tu|We|Th|Fr|Sa|Su))?,?\s*)+)?\s*(.*)$", rule)
+            dspec, tspec = (m.group(1) or "").replace(" ", "").rstrip(","), m.group(2).strip()
+            if dspec in ("PH", "SH", "PH,SH"): continue
+            days = _days(dspec) if dspec else set(range(7))
+            if not days: continue
+            if tspec.lower() in ("off", "closed"):
+                for d in days: week[d] = []
+                continue
+            ivs = []
+            for rng in tspec.split(","):
+                a, b = rng.strip().split("-")
+                o, c = _mins(a), _mins(b)
+                if c <= o: c += 1440          # past midnight, e.g. 18:00-02:00
+                ivs.append([o, c])
+            for d in days: week[d] = ivs       # later rules override earlier ones
+    except (ValueError, AttributeError):
+        return None
+    if all(w is None for w in week): return None
+    return [w or [] for w in week]
+
+def chain_key(name):
+    n = (name or "").lower()
+    n = re.split(r"\s+[@\-–(|]|\s+at\s+", n)[0]        # "Toast Box @ Bugis", "Kopitiam (Jurong)"
+    return " ".join(re.findall(r"[a-z0-9]+", n))
+
+def quality(p):
+    """0-100 completeness: how useful this listing is to a reader. Used to rank thin listings lower."""
+    s = 0
+    s += 25 if p.get("desc") else 0
+    s += 20 if p.get("hours") else (8 if p.get("hoursRaw") else 0)
+    s += 10 if p.get("website") else 0
+    s += 5 if p.get("phone") else 0
+    s += 10 if p.get("cuisine") or p["cat"] != "eat" else 0
+    s += 10 if p.get("price") is not None else 0
+    s += min(len(p.get("attrs") or {}), 2) * 5
+    s += 5 if p.get("address") else 0
+    s += 10 if "Manual listing" in p.get("sources", []) and not p.get("sample") else 0
+    s += 5 if p.get("rec") else 0
+    return min(s, 100)
+
 # ---------------------------------------------------------------- OpenStreetMap -> places
 CUISINE_MAP = {"chinese":"chinese","cantonese":"chinese","hainanese":"chinese","teochew":"chinese","dim_sum":"chinese","sichuan":"chinese",
   "indian":"indian","north_indian":"indian","south_indian":"indian","malay":"malay","indonesian":"malay","japanese":"japanese","sushi":"japanese",
@@ -192,6 +270,11 @@ def places_from_osm(data):
             "price": osm_price(t, cat), "attrs": osm_attrs(t, cat, sub), "cuisine": cu,
             "website": t.get("website") or t.get("contact:website") or "", "rec": "", "desc": "",
             "sources": ["OpenStreetMap"], "checked": TODAY.isoformat(), "sample": False,
+            "hours": parse_hours(t.get("opening_hours")), "hoursRaw": (t.get("opening_hours") or "").strip(),
+            "phone": (t.get("phone") or t.get("contact:phone") or "").split(";")[0].strip(),
+            "address": " ".join(x for x in [t.get("addr:housenumber", ""), t.get("addr:street", "")] if x).strip()
+                       + (f", Singapore {t['addr:postcode']}" if t.get("addr:postcode") else ""),
+            "brand": t.get("brand") or "", "cuisineLabel": ", ".join(x.strip().replace("_", " ").title() for x in t.get("cuisine", "").split(";") if x.strip())[:60],
         })
     return out
 
@@ -354,6 +437,17 @@ def merge(osm, hawkers, closures, manual):
             seen[p["id"]] += 1; p["id"] = f"{p['id']}-{seen[p['id']]}"
         else:
             seen[p["id"]] = 0
+    # 4. Chains: a brand tag, or the same base name 4+ times in one category
+    from collections import Counter
+    counts = Counter((p["cat"], chain_key(p["name"])) for p in places if p["cat"] in ("eat", "shop"))
+    for p in places:
+        key = chain_key(p.get("brand") or "") or chain_key(p["name"])
+        if p["cat"] in ("eat", "shop") and (p.get("brand") or counts[(p["cat"], chain_key(p["name"]))] >= 4) and key:
+            p["chain"] = key
+            p["chainName"] = p.get("brand") or p["name"].split(" @")[0].split(" (")[0].strip()
+        p["q"] = quality(p)
+        for k in ("hours", "hoursRaw", "phone", "address", "brand", "cuisineLabel"):
+            if not p.get(k): p.pop(k, None)           # keep the file small
     places.sort(key=lambda p: (p["cat"], p["name"].lower()))
     return places
 

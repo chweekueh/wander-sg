@@ -156,13 +156,27 @@ h1,h2,h3{margin:0}
 .attrtbl th,.attrtbl td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--line);vertical-align:top}
 .attrtbl th{font-weight:600;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:0.04em}
 .sponsor{border:1px dashed #CBBF9E;background:#FFFCF2}
+.hrs{font-size:13px;color:var(--muted)}
+.open-yes{color:#146C34;font-weight:700}
+.open-no{color:#B42318;font-weight:700}
+.vbadge{display:inline-flex;align-items:center;gap:3px;font-size:11px;font-weight:700;color:#1E3A8A;background:#E3ECFF;border-radius:999px;padding:2px 8px;vertical-align:middle;margin-left:6px;white-space:nowrap}
+.branches{align-self:flex-start;border:0;background:var(--soft);border-radius:999px;padding:6px 12px;font-size:12px;font-weight:600;cursor:pointer;min-height:32px}
+.branches:hover{background:#E4DED1}
+.hourtbl{width:100%;border-collapse:collapse;font-size:14px}
+.hourtbl td{padding:6px 0;border-bottom:1px solid var(--line)}
+.hourtbl td:last-child{text-align:right}
+.hourtbl tr.today td{font-weight:700}
+.contact{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;font-size:14px;margin:0}
+.contact dt{color:var(--muted)}
+.contact dd{margin:0;overflow-wrap:anywhere}
 .empty{padding:28px;text-align:center;background:var(--card);border:1px dashed var(--line);border-radius:16px;color:var(--muted)}
 
 /* map */
 .map{position:absolute;inset:0;background:#CFE3EC;overflow:hidden;touch-action:none;cursor:grab;user-select:none}
 .map.light{touch-action:pan-y}
 .map:active{cursor:grabbing}
-.map svg{position:absolute;inset:0;width:100%;height:100%}
+.map > svg{position:absolute;inset:0;width:100%;height:100%}
+.mappop[hidden],.details[hidden]{display:none}
 .land{fill:#EDEBE2;stroke:#BFC7BB;stroke-width:1;vector-effect:non-scaling-stroke}
 .pins{position:absolute;inset:0;pointer-events:none}
 .pin,.cluster{position:absolute;transform:translate(-50%,-50%);pointer-events:auto;border:2px solid #fff;border-radius:999px;display:flex;align-items:center;justify-content:center;color:#fff;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,0.3);padding:0}
@@ -181,7 +195,7 @@ h1,h2,h3{margin:0}
 .crumbs{font-size:14px;color:var(--muted);padding:18px 0 10px}
 .crumbs a{color:var(--muted)}
 .detail{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:28px;padding-bottom:40px}
-.photo{aspect-ratio:16/8;border-radius:20px;display:flex;flex-direction:column;gap:8px;align-items:center;justify-content:center;font-size:13px;font-weight:600;text-align:center;padding:16px}
+.photo{aspect-ratio:16/4;min-height:110px;border-radius:20px;display:flex;flex-direction:column;gap:8px;align-items:center;justify-content:center;font-size:13px;font-weight:600;text-align:center;padding:16px}
 .detail h1{font-family:var(--display);font-size:clamp(32px,4.4vw,52px);font-weight:800;letter-spacing:-0.03em;line-height:1.02;margin-top:18px}
 .panel{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px}
 .panel h2{font-size:17px;font-weight:700;margin-bottom:10px}
@@ -254,7 +268,7 @@ h1,h2,h3{margin:0}
   .card h3{font-size:15px}
   .meta,.rating{font-size:13px}
   .mappop{right:12px;max-width:none}
-  .photo{aspect-ratio:16/10}
+  .photo{aspect-ratio:16/6}
 }
 @media (max-width: 520px){
   .cats{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
@@ -485,7 +499,7 @@ function seedPlaces(){ return RAW.map(r => {
   const rc = x.rc ?? Math.round(Math.exp(lo + hash(id+'c')*(hi-lo)));
   return {kind:'place',id,n,c,sub,type,a,lat,lng,p,at,d,cu:x.cu||[],url:x.url||'',rec:x.rec||'',sample:!!x.sample,vegSource:!!x.vegSource,
     closure: x.closure ? `Closed for cleaning ${fmtD(addDays(TODAY,1))} – ${fmtD(addDays(TODAY,4))} (sample)` : '',
-    r:rating, rc, checked: addDays(TODAY,-Math.round(hash(id+'k')*20)), region: AREAS[a][2], sources:['Prototype seed (hand-entered)'], attrSrc:null, ratingSample:true};
+    r:rating, rc, checked: addDays(TODAY,-Math.round(hash(id+'k')*20)), region: AREAS[a][2], sources:['Prototype seed (hand-entered)'], attrSrc:null, ratingSample:true, q:60};
 }); }
 let PLACES=[], BYID={}, EVENTS=[], ITEMS=[], ITEMBY={}, LIVE=[], DATA_META=null, DATA_MODE='seed';
 
@@ -523,7 +537,9 @@ function placeFromJson(p){
   const cl = p.closure ? `Closed for cleaning ${fmtD(pDate(p.closure.start))} – ${fmtD(pDate(p.closure.end))}` : '';
   return {kind:'place',id:p.id,n:p.name,c:p.cat,sub:p.sub,type:p.type,a:p.area,lat:p.lat,lng:p.lng,p:p.price,at:Object.keys(p.attrs||{}),attrSrc:p.attrs||{},
     d:p.desc||'',cu:p.cuisine||[],url:p.website||'',rec:p.rec||'',sample:!!p.sample,closure:(cl && pDate(p.closure.end)>=TODAY)?cl:'',r:null,rc:null,
-    checked:pDate(p.checked),region:p.region,sources:p.sources||[]};
+    checked:pDate(p.checked),region:p.region,sources:p.sources||[],
+    hours:p.hours||null,hoursRaw:p.hoursRaw||'',phone:p.phone||'',address:p.address||'',chain:p.chain||'',chainName:p.chainName||'',
+    cuisineLabel:p.cuisineLabel||'',q:p.q??40,verified:(p.sources||[]).includes('Manual listing')&&!p.sample};
 }
 function eventFromJson(e){
   const start=pDate(e.start), end=pDate(e.end);
@@ -556,7 +572,7 @@ const nearPt = () => [AREAS[NEAR][0], AREAS[NEAR][1]];
 const dist = it => distKm(nearPt(), [it.lat,it.lng]);
 function saveToggle(id){ SAVED.has(id)?SAVED.delete(id):SAVED.add(id); store.set('wander_saved',[...SAVED]); updateSavedCount(); toast(SAVED.has(id)?'Saved':'Removed from saved'); $$(`[data-save="${id}"]`).forEach(b=>{b.setAttribute('aria-pressed',SAVED.has(id));b.innerHTML=bookmarkSvg(SAVED.has(id))}); }
 function updateSavedCount(){ $('#savedCount').textContent = SAVED.size ? `(${SAVED.size})` : ''; }
-const blankF = () => ({q:'',cat:null,sub:null,cuisine:null,region:null,area:null,maxPrice:null,free:false,attrs:[],when:null,sort:'best',list:null,text:[],minRating:false,nearSort:false,maxPriceLabel:''});
+const blankF = () => ({openNow:false,brand:null,q:'',cat:null,sub:null,cuisine:null,region:null,area:null,maxPrice:null,free:false,attrs:[],when:null,sort:'best',list:null,text:[],minRating:false,nearSort:false,maxPriceLabel:''});
 
 /* ============ PRICE / LABELS ============ */
 function priceLabel(it){
@@ -573,6 +589,30 @@ function inWindow(it, w){
   else if (w==='next7'){ b = addDays(TODAY,6); }
   else if (w==='all'){ return !it.past; }
   return it.start<=b && it.end>=a;
+}
+const SG_FMT = new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Singapore',weekday:'short',hour:'2-digit',minute:'2-digit',hourCycle:'h23'});
+function sgNow(){
+  const parts = SG_FMT.formatToParts(new Date()), g = t => (parts.find(p=>p.type===t)||{}).value;
+  return {d:['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].indexOf(g('weekday')), m:(+g('hour'))*60 + (+g('minute'))};
+}
+const DAYNAMES = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+const fmtMin = v => { v = ((v%1440)+1440)%1440; let h=Math.floor(v/60); const mm=v%60, ap=h>=12?'pm':'am'; h=h%12||12; return mm?`${h}:${String(mm).padStart(2,'0')}${ap}`:`${h}${ap}`; };
+function openState(it){
+  if (it.kind==='event') return inWindow(it,'today') ? {open:true,event:true} : null;
+  if (!it.hours) return null;
+  const {d,m} = sgNow(), H = it.hours, today = H[d]||[], yest = H[(d+6)%7]||[];
+  if (H.every(day => day.length===1 && day[0][0]===0 && day[0][1]>=1440)) return {open:true, allDay:true};
+  for (const [o,c] of yest) if (c>1440 && m < c-1440) return {open:true, until:c-1440};
+  for (const [o,c] of today) if (m>=o && m<c) return {open:true, until:c};
+  for (const [o] of today) if (o>m) return {open:false, next:o, inDays:0};
+  for (let k=1;k<=7;k++){ const ivs=H[(d+k)%7]||[]; if (ivs.length) return {open:false, next:ivs[0][0], inDays:k, day:(d+k)%7}; }
+  return {open:false, never:true};
+}
+function openLabel(it){
+  const s = openState(it); if (!s || s.event) return '';
+  if (s.open) return `<span class="open-yes">Open now</span>${s.allDay?' · 24 hours':' · until '+fmtMin(s.until)}`;
+  if (s.never) return `<span class="open-no">Closed</span>`;
+  return `<span class="open-no">Closed</span> · opens ${s.inDays===0?'':s.inDays===1?'tomorrow ':DAYNAMES[s.day]+' '}${fmtMin(s.next)}`;
 }
 const weekendLabel = () => (WK_START<TODAY ? `Today, ${fmtD(TODAY)}` : `${fmtD(WK_START)} – ${fmtD(WK_END)}`);
 
@@ -611,6 +651,7 @@ function parseQuery(q){
   take(/\b(indoors?|rainy days?|rain[- ]?proof|rainy|when it rains|wet weather)\b/g, () => F.attrs.push('indoor'));
   take(/\b(outdoors?|outside|open[- ]air|al fresco)\b/g, () => F.attrs.push('outdoor'));
   take(/\b(wheelchair[- ]?(accessible|friendly)?|accessible|accessibility)\b/g, () => F.attrs.push('access'));
+  take(/\b(open now|open right now|currently open|still open)\b/g, () => { F.openNow = true; });
   take(/\b(late[- ]?night|open late|late|supper|24 ?hours?|after midnight)\b/g, () => F.attrs.push('late'));
   take(/\b(date night|date|romantic|couples?)\b/g, () => F.attrs.push('date'));
   take(/\b(business (lunch(es)?|dinners?|meals?)|client (lunch(es)?|dinners?)|work lunch(es)?)\b/g, () => { F.attrs.push('business'); setCat('eat'); });
@@ -655,6 +696,8 @@ function textMatch(it, terms){
 function filterItems(F){
   let out = LIVE.filter(it => {
     if (F.list && !LISTS[F.list].pred(it)) return false;
+    if (F.brand && it.chain!==F.brand) return false;
+    if (F.openNow){ const st = openState(it); if (!st || !st.open) return false; }
     if (F.cat && it.c!==F.cat) return false;
     if (F.sub && it.sub!==F.sub) return false;
     if (F.cuisine && !it.cu.includes(F.cuisine)) return false;
@@ -670,9 +713,10 @@ function filterItems(F){
   });
   const sort = F.sort;
   const best = it => {
-    const d = dist(it), comp = (it.d?0.4:0)+(it.url?0.3:0)+Math.min(it.at.length,3)*0.1;
+    const d = dist(it), q = (it.kind==='event' ? 70 : (it.q ?? 50)) / 100;   // completeness 0-1
     const soon = it.kind==='event' && inWindow(it,'next7') ? 0.35 : 0;
-    return 1/(1+d/2) + comp*0.5 + soon - (it.sample&&it.kind==='place'?0.05:0);
+    const open = F.openNow ? 0 : ((openState(it)||{}).open ? 0.1 : 0);
+    return q*1.3 + 1/(1+d/2) + soon + open + (it.verified?0.15:0) - (it.sample&&it.kind==='place'?0.05:0);
   };
   if (sort==='near') out.sort((a,b)=>dist(a)-dist(b));
   else if (sort==='rating') out.sort((a,b)=>(b.r??-1)-(a.r??-1) || (b.rc??0)-(a.rc??0));
@@ -694,7 +738,7 @@ function ratingHtml(it){
 function metaHtml(it){
   const C = CATS[it.c];
   const when = it.kind==='event' ? `${it.start.getTime()===it.end.getTime()?fmtD(it.start):fmtD(it.start)+' – '+fmtD(it.end)} · ${esc(it.time)} · ` : '';
-  return `<span class="c" style="color:${C.color}">${esc(C.name)}</span> · ${when}${esc(it.type)} · ${esc(it.a)} · ${dist(it).toFixed(1)} km`;
+  return `<span class="c" style="color:${C.color}">${esc(C.name)}</span> · ${when}${esc(it.type)}${it.cuisineLabel&&it.cuisineLabel.toLowerCase()!==it.type.toLowerCase()?' · '+esc(it.cuisineLabel):''} · ${esc(it.a)} · ${dist(it).toFixed(1)} km`;
 }
 function tagsHtml(it){
   const t = [];
@@ -720,14 +764,16 @@ function attrTable(it){
   return `<div class="tblwrap"><table class="attrtbl"><thead><tr><th>Attribute</th><th>Source</th><th>Confidence</th></tr></thead><tbody>${
     it.at.map(a => { const [s,c] = attrSource(it,a); return `<tr><td>${esc(ATTR[a])}</td><td>${esc(s)}</td><td>${esc(c)}</td></tr>`; }).join('')}</tbody></table></div>`;
 }
-function cardHtml(it){
+function cardHtml(it, more=0){
   return `<article class="card" data-id="${it.id}">
     ${thumbHtml(it)}
     <div class="body">
-      <div class="top"><h3><a href="${href(it)}">${esc(it.n)}</a></h3>${saveBtn(it.id)}</div>
+      <div class="top"><h3><a href="${href(it)}">${esc(it.n)}</a>${it.verified?'<span class="vbadge" title="Added or checked by us">✓ Verified</span>':''}</h3>${saveBtn(it.id)}</div>
       <div class="meta">${metaHtml(it)}</div>
+      ${openLabel(it)?`<div class="hrs">${openLabel(it)}</div>`:''}
       <div class="rating">${ratingHtml(it)}</div>
       <div class="tags">${tagsHtml(it)}</div>
+      ${more?`<button type="button" class="branches" data-brand="${esc(it.chain)}">+${more} other ${esc(it.chainName)} branch${more>1?'es':''}</button>`:''}
       <button type="button" class="more" aria-expanded="false" data-more="${it.id}">Details</button>
       <div class="details" hidden>
         ${it.d?`<p style="margin:0">${esc(it.d)}</p><div class="ai">${it.sources.includes('NEA via data.gov.sg')&&!it.sources.includes('Manual listing')?'From NEA’s official description.':'AI-written from listed facts — check before relying on it.'}</div>`:'<p class="sub-muted" style="margin:0">No description yet.</p>'}
@@ -973,6 +1019,7 @@ function renderExplore(mode, arg){
     if (!F.cat || F.cat==='events') h += `<label><span class="sr">When</span><select data-f="when">${opt('','Any date',F.when||'')}${opt('today','Today',F.when||'')}${opt('weekend','This weekend',F.when||'')}${opt('next7','Next 7 days',F.when||'')}</select></label>`;
     h += `<label><span class="sr">Region</span><select data-f="region">${opt('','All of Singapore',F.region||'')}${REGIONS.map(r=>opt(r,r,F.region||'')).join('')}</select></label>`;
     h += `<label><span class="sr">Budget</span><select data-f="price">${opt('','Any budget',F.free?'free':(F.maxPrice??''))}${opt('free','Free only',F.free?'free':(F.maxPrice??''))}${[1,2,3].map(n=>opt(n,'Up to '+'$'.repeat(n),F.free?'free':(F.maxPrice??''))).join('')}</select></label>`;
+    h += `<button type="button" class="pill" data-open aria-pressed="${!!F.openNow}">Open now</button>`;
     ['indoor','outdoor','family','dog','access','business','date','late'].forEach(a => { h += `<button type="button" class="pill" data-attr="${a}" aria-pressed="${F.attrs.includes(a)}">${esc(ATTR[a])}</button>`; });
     h += `<label><span class="sr">Sort</span><select data-f="sort">${opt('best','Sort: Best match',F.sort)}${opt('near','Sort: Nearest',F.sort)}${opt('rating','Sort: Google rating (sample)',F.sort)}${(F.cat==='events'||F.when)?opt('date','Sort: Date',F.sort):''}</select></label>`;
     fbar.innerHTML = h;
@@ -984,6 +1031,7 @@ function renderExplore(mode, arg){
       if (k==='sort' && !v) F.sort='best';
       update(true);
     }));
+    const ob = $('[data-open]',fbar); ob.addEventListener('click', () => { F.openNow = !F.openNow; ob.setAttribute('aria-pressed',F.openNow); update(false); });
     $$('[data-attr]',fbar).forEach(b => b.addEventListener('click', () => { const a=b.dataset.attr; F.attrs = F.attrs.includes(a)?F.attrs.filter(x=>x!==a):[...F.attrs,a]; update(false); b.setAttribute('aria-pressed',F.attrs.includes(a)); }));
   }
   function chips(){
@@ -995,6 +1043,8 @@ function renderExplore(mode, arg){
     if (F.area) add('Around '+F.area, ()=>F.area=null);
     if (F.region) add(F.region, ()=>F.region=null);
     if (F.free) add('Free', ()=>F.free=false);
+    if (F.openNow) add('Open now', ()=>F.openNow=false);
+    if (F.brand){ const any = LIVE.find(i=>i.chain===F.brand); add('All '+(any?any.chainName:F.brand)+' branches', ()=>F.brand=null); }
     if (F.maxPrice!=null) add((F.maxPriceLabel?F.maxPriceLabel+' → ':'')+'up to '+'$'.repeat(F.maxPrice), ()=>{F.maxPrice=null;F.maxPriceLabel=''});
     if (F.when) add({today:'Today',weekend:'This weekend',next7:'Next 7 days'}[F.when], ()=>F.when=null);
     F.attrs.forEach(a => add(ATTR[a], ()=>F.attrs=F.attrs.filter(x=>x!==a)));
@@ -1014,12 +1064,19 @@ function renderExplore(mode, arg){
     const showAds = mode==='cat' || mode==='explore';
     const sortName = {best:'Best match',near:'Nearest to '+NEAR,rating:'Google rating (sample)',date:'Date'}[F.sort]||'Best match';
     let html = `<button type="button" class="sheet-handle" aria-label="Expand or collapse results"><i></i><span>${res.length} results — tap to ${sheet==='full'?'show map':'expand'}</span></button>`;
-    html += `<div class="count"><span>${res.length} result${res.length===1?'':'s'} · sorted by ${esc(sortName)}</span>${F.sort==='rating'?'<span>Ratings are sample values</span>':''}</div>`;
+    const grouped = res.filter(i=>i.chain).length - new Set(res.filter(i=>i.chain).map(i=>i.chain)).size;
+    html += `<div class="count"><span>${res.length} result${res.length===1?'':'s'} · sorted by ${esc(sortName)}${grouped>0&&!F.brand?` · ${grouped} chain branches grouped`:''}</span>${F.sort==='rating'?'<span>Ratings are sample values</span>':''}</div>`;
     if (!res.length) html += `<div class="empty"><b>No matches.</b><br>Try removing a filter above${F.text.length?', or the “contains” words':''}.</div>`;
-    const shown = res.slice(0, 60);
-    shown.forEach((it,i) => { if (showAds && (i===3||i===11)) html += sponsorCard(); html += cardHtml(it); });
-    if (res.length>60) html += `<div class="sub-muted" style="text-align:center;padding:8px">Showing the first 60. Narrow with filters to see more.</div>`;
+    const groups = [], byChain = new Map();
+    for (const it of res){
+      if (it.chain && !F.brand){ if (byChain.has(it.chain)){ byChain.get(it.chain).more++; continue; } const g={it,more:0}; byChain.set(it.chain,g); groups.push(g); }
+      else groups.push({it,more:0});
+    }
+    const shown = groups.slice(0, 60);
+    shown.forEach((g,i) => { if (showAds && (i===3||i===11)) html += sponsorCard(); html += cardHtml(g.it, g.more); });
+    if (groups.length>60) html += `<div class="sub-muted" style="text-align:center;padding:8px">Showing the first 60. Narrow with filters to see more.</div>`;
     listEl.innerHTML = html;
+    $$('[data-brand]',listEl).forEach(b => b.addEventListener('click', () => { F.brand = b.dataset.brand; update(false); listEl.scrollTop = 0; }));
     listEl.className = 'ex-list' + (sheet==='full'?' full':sheet==='peek'?' peek':'');
     currentMap.setItems(res);
     $('.sheet-handle',listEl).addEventListener('click', () => { sheet = sheet==='full'?'peek':sheet==='peek'?'half':'full'; listEl.className='ex-list'+(sheet==='full'?' full':sheet==='peek'?' peek':''); $('.sheet-handle span',listEl).textContent = `${res.length} results — tap to ${sheet==='full'?'show map':'expand'}`; });
@@ -1069,13 +1126,14 @@ function renderDetail(it){
     <div class="detail">
       <div>
         <div class="photo" style="background:${C.tint};color:${C.color}">${icon(it.c,40)}<span>No licensed photo yet — we only use official or licensed images</span></div>
-        <h1>${esc(it.n)}</h1>
+        <h1>${esc(it.n)}${it.verified?'<span class="vbadge" style="font-size:13px;font-family:var(--body);letter-spacing:0">✓ Verified</span>':''}</h1>
         <div class="meta" style="margin-top:8px;font-size:15px">${metaHtml(it)}</div>
         ${it.sample?`<p class="tag warn" style="display:inline-block;margin-top:10px">${it.kind==='event'?'Sample event — not real':'Sample listing — not a real business'}</p>`:''}
         <div class="linkrow" style="margin-top:16px">${saveBtnBig(it.id)}<a class="btn" href="${gmaps(it)}" target="_blank" rel="noopener">Directions (Google Maps)</a>${it.url?`<a class="btn" href="${esc(it.url)}" target="_blank" rel="noopener">Official site</a>`:''}${it.kind==='event'?(it.url?`<a class="btn" href="${esc(it.url)}" target="_blank" rel="noopener">Tickets / info</a>`:''):''}</div>
         <div class="stack" style="margin-top:22px">
           ${it.kind==='place'?(it.r==null?`<div class="panel"><h2>Rating</h2><p style="margin:0">${esc(priceLabel(it))}</p><p class="sub-muted" style="margin:8px 0 0">Google rating will load live here once Google is connected. It is never stored.</p></div>`:`<div class="panel"><h2>Rating</h2><div class="ratingbig"><b>★ ${it.r.toFixed(1)}</b><span>${it.rc.toLocaleString()} reviews · ${esc(priceLabel(it))}</span></div><p class="sub-muted" style="margin:8px 0 0">Google rating — <b>sample value</b>. In production this loads live from Google when you open the page and is never stored.</p></div>`)
             :`<div class="panel"><h2>When &amp; where</h2><p style="margin:0">${fmtD(it.start)}${it.end>it.start?' – '+fmtD(it.end):''} · ${esc(it.time)}</p><p style="margin:6px 0 0">Venue: ${venue?`<a href="${href(venue)}">${esc(venue.n)}</a>`:esc(it.venueName||it.a)} · ${it.p===0?'Free':it.p==null?'Price not listed':'Ticketed · '+'$'.repeat(it.p)}</p><p class="sub-muted" style="margin:8px 0 0">This event disappears from the site automatically after ${fmtD(it.end)}.</p></div>`}
+          ${it.kind==='place' ? hoursPanel(it) + contactPanel(it) : ''}
           <div class="panel"><h2>About</h2>${it.d?`<p style="margin:0">${esc(it.d)}</p><p class="ai" style="margin:8px 0 0">AI-written or official text — check before relying on it.</p>`:`<p class="sub-muted" style="margin:0">No description yet. ${esc(it.type)} in ${esc(it.a)}.</p>`}${it.rec?`<p style="margin:10px 0 0"><span class="tag rec">${esc(it.rec)}</span></p>`:''}${it.closure?`<p style="margin:10px 0 0"><span class="tag warn">${esc(it.closure)}</span></p>`:''}</div>
           <div class="panel"><h2>Attributes &amp; where they come from</h2>${attrTable(it)}</div>
           <div class="panel"><h2>Sources &amp; freshness</h2><p style="margin:0;font-size:14px">Sources: ${esc((it.sources||[]).join(', '))}. Last checked: ${fmtD(it.checked)}${DATA_MODE==='seed'?' (sample)':''}.</p><p style="margin:10px 0 0"><button type="button" class="btn small" data-report="${it.id}">Report an error</button></p></div>
@@ -1090,6 +1148,21 @@ function renderDetail(it){
   currentMini = MapView($('#miniMap'), {light:true});
   currentMini.setItems([it, ...nearby.map(n=>n.i)]);
   currentMini.select(it.id, true);
+}
+function hoursPanel(it){
+  if (!it.hours && !it.hoursRaw) return '';
+  const today = sgNow().d;
+  const rows = it.hours ? it.hours.map((ivs,i) => `<tr class="${i===today?'today':''}"><td>${DAYNAMES[i]}${i===today?' (today)':''}</td><td>${ivs.length ? ivs.map(([o,c]) => (c-o>=1440?'24 hours':fmtMin(o)+' – '+fmtMin(c))).join(', ') : 'Closed'}</td></tr>`).join('') : '';
+  return `<div class="panel"><h2>Opening hours</h2>${openLabel(it)?`<p style="margin:0 0 10px">${openLabel(it)}</p>`:''}${rows?`<table class="hourtbl"><tbody>${rows}</tbody></table>`:`<p style="margin:0">${esc(it.hoursRaw)}</p>`}<p class="sub-muted" style="margin:10px 0 0">From OpenStreetMap — hours change, so check before a special trip. Public holidays may differ.</p></div>`;
+}
+function contactPanel(it){
+  const rows = [];
+  if (it.address) rows.push(['Address', esc(it.address)]);
+  if (it.phone) rows.push(['Phone', `<a href="tel:${esc(it.phone.replace(/\s/g,''))}">${esc(it.phone)}</a>`]);
+  if (it.url) rows.push(['Website', `<a href="${esc(it.url)}" target="_blank" rel="noopener">${esc(it.url.replace(/^https?:\/\/(www\.)?/,'').replace(/\/$/,''))}</a>`]);
+  const branches = it.chain ? LIVE.filter(i=>i.chain===it.chain).length - 1 : 0;
+  if (!rows.length && !branches) return '';
+  return `<div class="panel"><h2>Contact &amp; details</h2>${rows.length?`<dl class="contact">${rows.map(([k,v])=>`<dt>${k}</dt><dd>${v}</dd>`).join('')}</dl>`:''}${branches?`<p style="margin:12px 0 0"><button type="button" class="branches" data-allbranches="${esc(it.chain)}">See all ${branches+1} ${esc(it.chainName)} branches</button></p>`:''}</div>`;
 }
 const saveBtnBig = id => `<button type="button" class="btn" data-save="${id}" aria-pressed="${SAVED.has(id)}">${bookmarkSvg(SAVED.has(id))}</button>`;
 
@@ -1200,6 +1273,7 @@ document.addEventListener('click', e => {
   const sv = e.target.closest('[data-save]'); if (sv){ e.preventDefault(); saveToggle(sv.dataset.save); return; }
   const mo = e.target.closest('[data-more]'); if (mo){ const d = mo.nextElementSibling; const open = d.hidden; d.hidden = !open; mo.setAttribute('aria-expanded', open); mo.textContent = open?'Hide details':'Details'; return; }
   const rp = e.target.closest('[data-report]'); if (rp){ openReport(rp.dataset.report); return; }
+  const ab = e.target.closest('[data-allbranches]'); if (ab){ LAST_SEARCH = {...blankF(), brand:ab.dataset.allbranches, sort:'near'}; go('search'); return; }
 });
 const nearSel = $('#nearSel');
 nearSel.innerHTML = REGIONS.map(r => `<optgroup label="${r}">${Object.entries(AREAS).filter(([,v])=>v[2]===r).map(([k])=>`<option${k===NEAR?' selected':''}>${esc(k)}</option>`).join('')}</optgroup>`).join('');
