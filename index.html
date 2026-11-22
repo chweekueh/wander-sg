@@ -70,6 +70,13 @@ h1,h2,h3{margin:0}
 .cattile:hover{color:var(--ink);transform:translateY(-1px)}
 .cattile .nm{display:block;font-family:var(--display);font-size:27px;font-weight:700;letter-spacing:-0.02em}
 .cattile .sub{font-size:13px;color:#4A4740}
+.cattile.photo{position:relative;overflow:hidden;color:#fff;background-size:cover;background-position:center;min-height:190px;isolation:isolate}
+.cattile.photo::before{content:'';position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(0,0,0,0.10) 0%,rgba(0,0,0,0.25) 40%,rgba(0,0,0,0.78) 100%)}
+.cattile.photo:hover{color:#fff}
+.cattile.photo .nm{text-shadow:0 1px 8px rgba(0,0,0,0.45)}
+.cattile.photo .sub{color:rgba(255,255,255,0.95);text-shadow:0 1px 6px rgba(0,0,0,0.5)}
+.photo-credit{font-size:12px;color:var(--muted);margin-top:8px}
+.photo-credit a{color:var(--muted)}
 .cattile .ic{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#fff}
 .sec{margin-top:56px}
 .sec-h{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:12px;margin-bottom:18px}
@@ -328,6 +335,15 @@ const SUBS = {
 };
 const ATTR = {indoor:'Indoor',outdoor:'Outdoor',family:'Family-friendly',dog:'Dog-friendly',access:'Wheelchair accessible',business:'Good for business',date:'Date night',late:'Late night',veg:'Vegetarian',groups:'Good for groups'};
 const CUISINES = ['local','chinese','indian','malay','peranakan','japanese','seafood','western','cafe'];
+const PHOTOS = {
+  eat:{url:'https://images.unsplash.com/photo-1584198414538-f469f6fad430',pos:'center',by:'Ethan Hu',user:'ethanhjy'},
+  see:{url:'https://images.unsplash.com/photo-1485257334450-84ec1ba6393d',pos:'center 30%',by:'Annie Spratt',user:'anniespratt'},
+  shop:{url:'https://images.unsplash.com/photo-1555947970-15e7a8a0bb73',pos:'center',by:'Bna Ignacio',user:'bnaignacio'},
+  events:{url:'https://images.unsplash.com/photo-1585714778239-83301e541f48',pos:'center',by:'Rogan Yeoh',user:'roganyeoh'},
+  do:{url:'https://images.unsplash.com/photo-1694497673772-a3a4eeda9755',pos:'center',by:'Mudassir Khan',user:'mudassir_xe'}
+};
+const photoStyle = k => `background-color:${CATS[k].color};background-image:url('${PHOTOS[k].url}?auto=format&fit=crop&w=900&q=80');background-position:${PHOTOS[k].pos}`;
+const photoCredit = () => `<p class="photo-credit">Photos on Unsplash by ${Object.values(PHOTOS).map(p=>`<a href="https://unsplash.com/@${p.user}?utm_source=wander_sg&utm_medium=referral" target="_blank" rel="noopener">${esc(p.by)}</a>`).join(', ')}.</p>`;
 const icon = (c, s=18) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICON[c]}</svg>`;
 
 /* ============ PLACES (seed data) ============
@@ -843,8 +859,9 @@ function renderHome(){
       ${examplesHtml()}
     </section>
     <section class="cats" aria-label="Categories">
-      ${Object.entries(CATS).map(([k,C]) => `<a class="cattile" href="#${k}" style="background:${C.tint}"><span class="ic" style="background:${C.color}">${icon(k,22)}</span><span><span class="nm">${esc(C.name)}</span><span class="sub">${esc(C.sub)} · ${counts[k]}</span></span></a>`).join('')}
+      ${Object.entries(CATS).map(([k,C]) => `<a class="cattile photo" href="#${k}" style="${photoStyle(k)}"><span class="ic" style="background:${C.color}">${icon(k,22)}</span><span><span class="nm">${esc(C.name)}</span><span class="sub">${esc(C.sub)} · ${counts[k].toLocaleString()}</span></span></a>`).join('')}
     </section>
+    ${photoCredit()}
     <section class="sec" aria-label="Collections">
       <div class="sec-h"><h2>This weekend’s lists</h2><a href="#lists">Every list follows a published rule →</a></div>
       <div class="listgrid">
@@ -1025,7 +1042,7 @@ function renderSearchLanding(){
     ${searchForm('', true)}
     ${examplesHtml()}
   </section>
-  <section class="cats" aria-label="Categories">${Object.entries(CATS).map(([k,C]) => `<a class="cattile" href="#${k}" style="background:${C.tint};min-height:110px"><span class="ic" style="background:${C.color}">${icon(k,22)}</span><span class="nm">${esc(C.name)}</span></a>`).join('')}</section></div>`;
+  <section class="cats" aria-label="Categories">${Object.entries(CATS).map(([k,C]) => `<a class="cattile photo" href="#${k}" style="${photoStyle(k)};min-height:130px"><span class="ic" style="background:${C.color}">${icon(k,22)}</span><span class="nm">${esc(C.name)}</span></a>`).join('')}</section>${photoCredit()}</div>`;
   bindSearchForms();
 }
 
