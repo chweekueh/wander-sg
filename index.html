@@ -1,0 +1,1189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>wander.sg — Singapore discovery (prototype)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F8F6F1; --card:#FFFFFF; --ink:#1C1B19; --muted:#55524A; --line:#E4DFD4; --soft:#EFEBE2;
+  --accent:#C23B0B; --accent-ink:#FFFFFF; --warn-bg:#FFF1C2; --warn-ink:#5E4100;
+  --eat:#C2410C; --eat-t:#FBE3D3; --see:#1D4ED8; --see-t:#DDE6FB; --shop:#7C3AED; --shop-t:#EBE2FB;
+  --events:#BE185D; --events-t:#F9DDEA; --do:#15803D; --do-t:#D9F0DF;
+  --display:'Bricolage Grotesque',system-ui,sans-serif; --body:Inter,system-ui,sans-serif;
+  --radius:18px; --header-h:64px;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.45}
+a{color:var(--ink)} a:hover{color:var(--accent)}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid #1D4ED8;outline-offset:2px}
+.sr{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.container{max-width:1240px;margin:0 auto;padding:0 24px}
+h1,h2,h3{margin:0}
+.display{font-family:var(--display);letter-spacing:-0.03em}
+
+/* banner + header */
+.proto{background:var(--ink);color:#F3F0E8;font-size:13px;text-align:center;padding:7px 16px}
+.proto a{color:#FFD9C7}
+.site-header{position:sticky;top:0;z-index:40;background:rgba(248,246,241,0.96);backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
+.site-header .in{max-width:1240px;margin:0 auto;padding:0 24px;height:var(--header-h);display:flex;align-items:center;gap:18px}
+.logo{font-family:var(--display);font-weight:800;font-size:25px;letter-spacing:-0.03em;text-decoration:none;color:var(--ink);white-space:nowrap}
+.logo span{color:var(--accent)}
+.mainnav{display:flex;gap:2px;flex:1;flex-wrap:wrap}
+.mainnav a{padding:10px 11px;border-radius:10px;text-decoration:none;font-weight:500;font-size:15px}
+.mainnav a[aria-current="page"]{background:var(--soft)}
+.near{display:flex;align-items:center;gap:6px;font-size:14px;color:var(--muted)}
+.near select{border:1px solid var(--line);background:var(--card);border-radius:999px;height:40px;padding:0 12px;font-weight:600;color:var(--ink)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:0 18px;border-radius:999px;border:1.5px solid var(--ink);background:transparent;font-weight:600;font-size:14px;text-decoration:none;cursor:pointer;color:var(--ink)}
+.btn:hover{color:var(--ink);background:var(--soft)}
+.btn.solid{background:var(--ink);color:#F8F6F1}
+.btn.solid:hover{background:#000;color:#fff}
+.btn.accent{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.accent:hover{background:#A2310A;color:#fff}
+.btn.small{min-height:36px;padding:0 14px;font-size:13px}
+.iconbtn{width:44px;height:44px;border-radius:999px;border:0;background:transparent;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted)}
+.iconbtn:hover{background:var(--soft);color:var(--ink)}
+.iconbtn[aria-pressed="true"]{color:var(--accent)}
+.hdr-search{display:none}
+
+/* home */
+.hero{padding:44px 0 30px;display:flex;flex-direction:column;gap:18px}
+.kicker{font-size:14px;font-weight:600;color:var(--accent);text-transform:uppercase;letter-spacing:0.08em}
+.hero h1{font-family:var(--display);font-weight:800;font-size:clamp(44px,7vw,80px);line-height:0.98;letter-spacing:-0.04em;max-width:920px}
+.searchform{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.searchbox{flex:1 1 380px;max-width:660px;display:flex;align-items:center;gap:12px;background:var(--card);border:1.5px solid var(--ink);border-radius:16px;padding:0 16px;height:56px}
+.searchbox input{flex:1;border:0;background:transparent;font-size:16px;outline:none;min-width:0}
+.pills{display:flex;flex-wrap:wrap;gap:8px}
+.pill{min-height:40px;padding:0 16px;border-radius:999px;border:1px solid var(--line);background:var(--card);font-size:14px;font-weight:500;cursor:pointer;display:inline-flex;align-items:center;gap:6px;text-decoration:none;color:var(--ink);white-space:nowrap}
+.pill:hover{border-color:var(--ink);color:var(--ink)}
+.pill[aria-pressed="true"],.pill.on{background:var(--ink);color:#F8F6F1;border-color:var(--ink)}
+.examples{font-size:14px;color:var(--muted);display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.examples button{border:0;background:var(--soft);border-radius:999px;padding:8px 12px;cursor:pointer;font-size:13px}
+.examples button:hover{background:#E4DED1}
+.cats{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+.cattile{display:flex;flex-direction:column;justify-content:space-between;gap:24px;padding:18px;border-radius:var(--radius);text-decoration:none;min-height:134px;color:var(--ink)}
+.cattile:hover{color:var(--ink);transform:translateY(-1px)}
+.cattile .nm{display:block;font-family:var(--display);font-size:27px;font-weight:700;letter-spacing:-0.02em}
+.cattile .sub{font-size:13px;color:#4A4740}
+.cattile .ic{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#fff}
+.sec{margin-top:56px}
+.sec-h{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:12px;margin-bottom:18px}
+.sec-h h2{font-family:var(--display);font-size:clamp(28px,3.4vw,38px);font-weight:800;letter-spacing:-0.03em}
+.sec-h a{font-size:14px;font-weight:500}
+.listgrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.bigtile{grid-column:span 2;grid-row:span 2;border-radius:22px;background:var(--ink);color:#F8F6F1;padding:26px;text-decoration:none;display:flex;flex-direction:column;justify-content:space-between;gap:18px;min-height:400px}
+.bigtile:hover{color:#fff}
+.bigtile .ph{flex:1;min-height:150px;border-radius:14px;background:#34322D;color:#CFCAC0;display:flex;align-items:center;justify-content:center;font-size:13px;text-align:center;padding:12px}
+.bigtile .k{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:#F4A27E}
+.bigtile .t{font-family:var(--display);font-size:clamp(28px,3vw,40px);font-weight:800;letter-spacing:-0.03em;line-height:1.02;margin-top:8px}
+.bigtile .r{font-size:14px;color:#CFCAC0;margin-top:10px}
+.smalltile{border-radius:22px;background:var(--card);border:1px solid var(--line);padding:20px;text-decoration:none;display:flex;flex-direction:column;justify-content:space-between;gap:14px;min-height:190px;color:var(--ink)}
+.smalltile:hover{border-color:var(--ink);color:var(--ink)}
+.smalltile .k{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em}
+.smalltile .t{font-family:var(--display);font-size:24px;font-weight:700;letter-spacing:-0.02em;line-height:1.08}
+.smalltile .r{font-size:13px;color:var(--muted);margin-top:6px}
+.evgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:16px}
+.evcard{display:flex;gap:14px;padding:16px;border-radius:var(--radius);background:var(--card);border:1px solid var(--line);text-decoration:none;color:var(--ink)}
+.evcard:hover{border-color:var(--ink);color:var(--ink)}
+.datebox{width:62px;flex:none;border-radius:12px;background:var(--events-t);color:#8E1246;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 0;line-height:1.1}
+.datebox b{font-family:var(--display);font-size:26px;font-weight:800}
+.datebox span{font-size:12px;font-weight:600;text-transform:uppercase}
+.evcard h3{font-size:16px;font-weight:600}
+.sub-muted{font-size:13px;color:var(--muted)}
+.mapsec{border-radius:24px;overflow:hidden;background:var(--card);border:1px solid var(--line);display:flex;flex-wrap:wrap}
+.mapsec .mapbox{flex:999 1 620px;min-width:0;height:440px;position:relative}
+.mapsec .side{flex:1 1 300px;padding:30px;display:flex;flex-direction:column;justify-content:center;gap:14px}
+.mapsec .side h2{font-family:var(--display);font-size:34px;font-weight:800;letter-spacing:-0.03em;line-height:1.02}
+.legend{display:flex;flex-wrap:wrap;gap:8px}
+.legend button{min-height:36px;padding:0 12px;border-radius:999px;border:1px solid var(--line);background:var(--card);display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;cursor:pointer}
+.legend button[aria-pressed="false"]{opacity:0.5;text-decoration:line-through}
+.dot{width:10px;height:10px;border-radius:999px;display:inline-block;flex:none}
+.adgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:16px}
+.adslot{border-radius:var(--radius);border:1px dashed #CBBF9E;background:#FFFCF2;padding:18px;display:flex;flex-direction:column;gap:8px;min-height:120px}
+.badge-sp{align-self:flex-start;font-size:12px;font-weight:600;background:var(--warn-bg);color:var(--warn-ink);padding:2px 8px;border-radius:4px}
+.badge{display:inline-block;font-size:11px;font-weight:600;padding:2px 7px;border-radius:4px;background:var(--soft);color:var(--muted);vertical-align:middle}
+
+/* explore */
+.ex-head{padding:22px 0 12px;display:flex;flex-direction:column;gap:12px}
+.ex-head h1{font-family:var(--display);font-size:clamp(30px,4vw,44px);font-weight:800;letter-spacing:-0.03em;line-height:1.02}
+.rulebox{font-size:14px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 14px;color:var(--muted)}
+.rulebox b{color:var(--ink)}
+.filterbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.filterbar select{height:40px;border:1px solid var(--line);border-radius:999px;background:var(--card);padding:0 12px;font-size:14px;max-width:220px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.chip{display:inline-flex;align-items:center;gap:4px;min-height:32px;padding:0 4px 0 12px;border-radius:999px;background:#FFE7DC;color:#7A2405;font-size:13px;font-weight:600}
+.chip button{width:28px;height:28px;border:0;background:transparent;border-radius:999px;cursor:pointer;color:inherit;font-size:16px;line-height:1}
+.chip button:hover{background:#FFD3BF}
+.chips .lbl{font-size:13px;color:var(--muted);margin-right:4px}
+.ex-body{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:22px;align-items:start;padding-bottom:40px}
+.ex-map{position:sticky;top:calc(var(--header-h) + 12px);height:calc(100vh - var(--header-h) - 28px);min-height:480px;border-radius:20px;overflow:hidden;border:1px solid var(--line)}
+.ex-list{display:flex;flex-direction:column;gap:12px;min-width:0}
+.sheet-handle{display:none}
+.count{font-size:14px;color:var(--muted);display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.card{display:flex;gap:14px;padding:14px;border:1px solid var(--line);border-radius:16px;background:var(--card);transition:border-color .15s}
+.card.hl{border-color:var(--ink);box-shadow:0 0 0 1px var(--ink)}
+.thumb{width:104px;height:104px;flex:none;border-radius:12px;display:flex;flex-direction:column;gap:4px;align-items:center;justify-content:center;font-size:10px;font-weight:600;text-align:center;padding:6px}
+.card .body{flex:1;min-width:0;display:flex;flex-direction:column;gap:5px}
+.card .top{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
+.card h3{font-size:17px;font-weight:600;line-height:1.25}
+.card h3 a{text-decoration:none}
+.card h3 a:hover{text-decoration:underline}
+.meta{font-size:14px;color:var(--muted)}
+.meta .c{font-weight:600}
+.rating{font-size:14px}
+.rating small{color:var(--muted)}
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+.tag{font-size:12px;padding:3px 8px;border-radius:999px;background:var(--soft);color:#3F3C35}
+.tag.warn{background:var(--warn-bg);color:var(--warn-ink)}
+.tag.rec{background:#E3ECFF;color:#1E3A8A}
+.more{align-self:flex-start;border:0;background:transparent;padding:8px 0;font-weight:600;font-size:13px;cursor:pointer;color:var(--accent);min-height:36px}
+.details{border-top:1px solid var(--line);margin-top:4px;padding-top:10px;display:flex;flex-direction:column;gap:10px;font-size:14px}
+.ai{font-size:12px;color:var(--muted)}
+.linkrow{display:flex;flex-wrap:wrap;gap:8px}
+.attrtbl{width:100%;border-collapse:collapse;font-size:13px}
+.attrtbl th,.attrtbl td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+.attrtbl th{font-weight:600;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:0.04em}
+.sponsor{border:1px dashed #CBBF9E;background:#FFFCF2}
+.empty{padding:28px;text-align:center;background:var(--card);border:1px dashed var(--line);border-radius:16px;color:var(--muted)}
+
+/* map */
+.map{position:absolute;inset:0;background:#CFE3EC;overflow:hidden;touch-action:none;cursor:grab;user-select:none}
+.map.light{touch-action:pan-y}
+.map:active{cursor:grabbing}
+.map svg{position:absolute;inset:0;width:100%;height:100%}
+.land{fill:#EDEBE2;stroke:#BFC7BB;stroke-width:1;vector-effect:non-scaling-stroke}
+.pins{position:absolute;inset:0;pointer-events:none}
+.pin,.cluster{position:absolute;transform:translate(-50%,-50%);pointer-events:auto;border:2px solid #fff;border-radius:999px;display:flex;align-items:center;justify-content:center;color:#fff;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,0.3);padding:0}
+.pin{width:30px;height:30px}
+.pin.hl,.pin.sel{width:40px;height:40px;z-index:5;box-shadow:0 0 0 4px rgba(28,27,25,0.35),0 2px 6px rgba(0,0,0,0.3)}
+.cluster{font-weight:700;font-size:13px;box-shadow:0 0 0 5px rgba(255,255,255,0.55),0 1px 4px rgba(0,0,0,0.3)}
+.rlabel{position:absolute;transform:translate(-50%,-50%);font-size:11px;font-weight:700;letter-spacing:0.14em;color:#8B8778;pointer-events:none;white-space:nowrap}
+.mapctl{position:absolute;right:12px;top:12px;display:flex;flex-direction:column;gap:6px;z-index:6}
+.mapctl button{width:40px;height:40px;border-radius:10px;border:0;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,0.2);font-size:20px;font-weight:600;cursor:pointer}
+.mapattr{position:absolute;left:10px;bottom:8px;background:rgba(255,255,255,0.92);border-radius:6px;padding:4px 8px;font-size:11px;color:#4A4740;z-index:6;max-width:calc(100% - 20px)}
+.mappop{position:absolute;left:12px;right:64px;top:12px;max-width:360px;background:#fff;border-radius:14px;box-shadow:0 6px 20px rgba(0,0,0,0.2);padding:12px;display:flex;gap:12px;z-index:7}
+.mappop .x{position:absolute;right:4px;top:4px}
+.mappop h3{font-size:15px;padding-right:36px}
+
+/* detail */
+.crumbs{font-size:14px;color:var(--muted);padding:18px 0 10px}
+.crumbs a{color:var(--muted)}
+.detail{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:28px;padding-bottom:40px}
+.photo{aspect-ratio:16/8;border-radius:20px;display:flex;flex-direction:column;gap:8px;align-items:center;justify-content:center;font-size:13px;font-weight:600;text-align:center;padding:16px}
+.detail h1{font-family:var(--display);font-size:clamp(32px,4.4vw,52px);font-weight:800;letter-spacing:-0.03em;line-height:1.02;margin-top:18px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px}
+.panel h2{font-size:17px;font-weight:700;margin-bottom:10px}
+.ratingbig{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.ratingbig b{font-family:var(--display);font-size:34px}
+.minimap{height:260px;position:relative;border-radius:14px;overflow:hidden;border:1px solid var(--line)}
+.stack{display:flex;flex-direction:column;gap:16px}
+.mini{display:flex;gap:10px;align-items:center;text-decoration:none;padding:8px;border-radius:12px;color:var(--ink)}
+.mini:hover{background:var(--soft);color:var(--ink)}
+.mini .sq{width:44px;height:44px;border-radius:10px;flex:none;display:flex;align-items:center;justify-content:center}
+.prose{max-width:760px;padding-bottom:40px}
+.prose h1{font-family:var(--display);font-size:clamp(32px,4vw,46px);font-weight:800;letter-spacing:-0.03em;margin:26px 0 10px}
+.prose h2{font-size:20px;margin:28px 0 8px}
+.prose table{width:100%;border-collapse:collapse;font-size:14px;background:var(--card);border-radius:12px;overflow:hidden}
+.prose th,.prose td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+.prose th{background:var(--soft);font-size:13px}
+.tblwrap{overflow-x:auto}
+
+/* footer + tabbar */
+.site-footer{border-top:1px solid var(--line);margin-top:40px}
+.site-footer .in{max-width:1240px;margin:0 auto;padding:26px 24px 30px;display:flex;flex-wrap:wrap;gap:12px 24px;font-size:14px;align-items:center}
+.site-footer .note{flex-basis:100%;font-size:12px;color:var(--muted)}
+.linkbtn{border:0;background:transparent;padding:0;text-decoration:underline;cursor:pointer;font-size:14px;color:var(--ink)}
+.tabbar{display:none}
+
+/* modal */
+.modal-bg{position:fixed;inset:0;background:rgba(20,19,17,0.45);z-index:80;display:flex;align-items:center;justify-content:center;padding:16px}
+.modal{background:var(--card);border-radius:20px;max-width:480px;width:100%;padding:22px;display:flex;flex-direction:column;gap:12px}
+.modal h2{font-size:20px}
+.modal label{font-size:13px;font-weight:600;display:flex;flex-direction:column;gap:6px}
+.modal select,.modal textarea{border:1px solid var(--line);border-radius:10px;padding:10px;background:#fff}
+.toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 16px;border-radius:999px;font-size:14px;z-index:90}
+
+@media (max-width: 1000px){
+  .listgrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .detail{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width: 860px){
+  :root{--header-h:56px}
+  .container{padding:0 16px}
+  .site-header .in{padding:0 16px;gap:10px}
+  .mainnav{display:none}
+  .near .lbl{display:none}
+  .near select{max-width:150px}
+  .hdr-search{display:inline-flex}
+  .hdr-saved{display:none}
+  .logo{font-size:22px;flex:1}
+  body{padding-bottom:72px}
+  .tabbar{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));position:fixed;left:0;right:0;bottom:0;height:68px;background:var(--bg);border-top:1px solid var(--line);z-index:50}
+  .tabbar a{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:11px;font-weight:600;color:var(--muted);text-decoration:none}
+  .tabbar a[aria-current="page"]{color:var(--accent)}
+  .hero{padding:24px 0 18px}
+  .bigtile{grid-column:span 2;grid-row:auto;min-height:300px}
+  .mapsec .mapbox{height:320px}
+  /* mobile explore = map + slide-up sheet */
+  .ex-head{padding:12px 0 10px;gap:8px}
+  .ex-head h1{font-size:26px}
+  .ex-head .filterbar{flex-wrap:nowrap;overflow-x:auto;padding-bottom:4px}
+  .ex-head .filterbar>*{flex:none}
+  .ex-body{display:block;position:relative;height:var(--exh,70vh);margin:0 -16px;padding:0}
+  .ex-map{position:absolute;inset:0;height:auto;min-height:0;border-radius:0;border:0}
+  .ex-list{position:absolute;left:0;right:0;bottom:0;height:46%;background:var(--bg);border-radius:22px 22px 0 0;box-shadow:0 -8px 26px rgba(0,0,0,0.18);padding:0 14px 16px;overflow-y:auto;z-index:10;transition:height .25s ease}
+  .ex-list.full{height:92%}
+  .ex-list.peek{height:96px;overflow:hidden}
+  .sheet-handle{display:flex;flex-direction:column;align-items:center;gap:6px;position:sticky;top:0;background:var(--bg);padding:8px 0 6px;z-index:2;border:0;width:100%;cursor:pointer}
+  .sheet-handle i{width:42px;height:5px;border-radius:999px;background:#C9C3B6;display:block}
+  .sheet-handle span{font-size:12px;font-weight:600;color:var(--muted)}
+  .thumb{width:76px;height:76px}
+  .card{padding:10px;gap:12px}
+  .card h3{font-size:15px}
+  .meta,.rating{font-size:13px}
+  .mappop{right:12px;max-width:none}
+  .photo{aspect-ratio:16/10}
+}
+@media (max-width: 520px){
+  .listgrid{grid-template-columns:minmax(0,1fr)}
+  .bigtile{grid-column:auto}
+}
+</style>
+</head>
+<body>
+<div class="proto">Prototype (Level 2) — ratings, events, closures and most attributes are <b>sample data</b>, not live. <a href="#sources">What's real?</a></div>
+<header class="site-header">
+  <div class="in">
+    <a class="logo" href="#home">wander<span>.</span>sg</a>
+    <nav class="mainnav" aria-label="Categories">
+      <a href="#eat">Eat</a><a href="#see">See</a><a href="#shop">Shop</a><a href="#events">Events</a><a href="#do">Do &amp; Outdoors</a><a href="#explore">Map</a><a href="#lists">Lists</a>
+    </nav>
+    <label class="near"><span class="lbl">Near</span><span class="sr">Your area, used for distances</span><select id="nearSel"></select></label>
+    <a class="iconbtn hdr-search" href="#search" aria-label="Search"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></a>
+    <a class="btn small hdr-saved" href="#saved">Saved <span id="savedCount"></span></a>
+  </div>
+</header>
+<main id="app"></main>
+<footer class="site-footer"><div class="in">
+  <a href="#how-we-rank">How we rank</a><a href="#sources">Data sources &amp; attribution</a><button type="button" class="linkbtn" data-report="">Report an error</button><a href="#terms">Terms &amp; Privacy</a>
+  <div class="note">wander.sg is a working name. Prototype only — not affiliated with any business or agency listed. Coastline © OpenStreetMap contributors (ODbL).</div>
+</div></footer>
+<nav class="tabbar" aria-label="Main">
+  <a href="#home" data-tab="home"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-7 9 7v9H3z"/></svg>Home</a>
+  <a href="#explore" data-tab="explore"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/></svg>Explore</a>
+  <a href="#search" data-tab="search"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>Search</a>
+  <a href="#saved" data-tab="saved"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h12v18l-6-4-6 4z"/></svg>Saved</a>
+</nav>
+<div id="modalRoot"></div>
+
+<script>
+"use strict";
+/* ============ GEOGRAPHY ============ */
+const LAND = "M168.0 23.0L169.0 23.0L218.0 3.0L218.0 11.0L228.0 6.0L232.0 15.0L236.0 11.0L251.0 20.0L239.0 25.0L255.0 27.0L263.0 40.0L257.0 50.0L270.0 50.0L277.0 43.0L298.0 60.0L313.0 54.0L326.0 66.0L321.0 69.0L331.0 87.0L331.0 71.0L338.0 85.0L353.0 93.0L367.0 95.0L377.0 83.0L398.0 85.0L406.0 105.0L428.0 111.0L443.0 123.0L435.0 117.0L421.0 147.0L432.0 150.0L432.0 159.0L423.0 155.0L401.0 165.0L370.0 159.0L287.0 187.0L287.0 182.0L261.0 210.0L252.0 202.0L251.0 214.0L240.0 207.0L205.0 213.0L195.0 203.0L186.0 220.0L179.0 216.0L187.0 202.0L177.0 196.0L171.0 207.0L150.0 194.0L156.0 189.0L169.0 197.0L172.0 191.0L155.0 173.0L155.0 150.0L132.0 157.0L148.0 178.0L113.0 166.0L122.0 176.0L111.0 178.0L111.0 167.0L109.0 173.0L95.0 167.0L99.0 174.0L95.0 170.0L84.0 176.0L81.0 165.0L78.0 178.0L69.0 169.0L74.0 180.0L64.0 188.0L50.0 173.0L57.0 164.0L49.0 171.0L52.0 159.0L43.0 164.0L38.0 159.0L50.0 192.0L40.0 196.0L43.0 212.0L25.0 212.0L22.0 217.0L29.0 214.0L15.0 221.0L21.0 244.0L11.0 254.0L44.0 264.0L9.0 256.0L12.0 235.0L5.0 231.0L13.0 230.0L8.0 223.0L14.0 207.0L6.0 212.0L20.0 191.0L18.0 178.0L35.0 125.0L58.0 92.0L67.0 91.0L86.0 69.0L73.0 60.0L74.0 50.0L113.0 26.0L129.0 25.0L137.0 36.0L163.0 37.0L168.0 23.0ZM374.0 57.0L390.0 57.0L392.0 67.0L380.0 67.0L375.0 59.0L358.0 76.0L354.0 71.0L361.0 69.0L353.0 61.0L350.0 66.0L326.0 53.0L334.0 47.0L359.0 58.0L374.0 57.0ZM484.0 134.0L484.0 136.0L481.0 137.0L472.0 130.0L484.0 136.0L475.0 119.0L474.0 112.0L476.0 104.0L480.0 92.0L488.0 78.0L487.0 69.0L483.0 69.0L479.0 88.0L453.0 99.0L436.0 69.0L420.0 77.0L417.0 74.0L426.0 91.0L415.0 74.0L429.0 72.0L430.0 63.0L413.0 65.0L409.0 54.0L414.0 46.0L427.0 62.0L429.0 50.0L443.0 44.0L458.0 43.0L482.0 57.0L484.0 68.0L486.0 68.0L488.0 70.0L488.0 76.0L487.0 81.0L477.0 100.0L475.0 113.0L484.0 134.0ZM169.0 267.0L179.0 264.0L182.0 270.0L169.0 286.0L175.0 278.0L166.0 273.0L160.0 277.0L159.0 257.0L169.0 267.0ZM63.0 230.0L54.0 202.0L84.0 186.0L96.0 185.0L84.0 199.0L88.0 203.0L111.0 178.0L140.0 201.0L125.0 204.0L130.0 211.0L123.0 215.0L107.0 206.0L114.0 216.0L96.0 224.0L85.0 207.0L80.0 212.0L90.0 235.0L73.0 252.0L72.0 252.0L70.0 247.0L72.0 251.0L76.0 247.0L63.0 230.0ZM252.0 245.0L258.0 243.0L253.0 248.0L258.0 257.0L252.0 252.0L252.0 262.0L243.0 253.0L252.0 252.0L247.0 249.0L252.0 245.0Z";
+const BW = 490, BH = 290;
+const PX = lng => (lng - 103.6) * 1000, PY = lat => (1.475 - lat) * 1000;
+
+const AREAS = {
+  'Orchard':[1.3040,103.8318,'Central'],'Marina Bay':[1.2830,103.8600,'Central'],'Chinatown':[1.2815,103.8445,'Central'],
+  'Tiong Bahru':[1.2855,103.8300,'Central'],'River Valley':[1.2930,103.8380,'Central'],'Civic District':[1.2900,103.8510,'Central'],
+  'Bugis & Kampong Glam':[1.3010,103.8570,'Central'],'Little India':[1.3065,103.8510,'Central'],'Bukit Timah':[1.3290,103.8000,'Central'],
+  'Holland & Dempsey':[1.3080,103.8030,'Central'],'Novena & Balestier':[1.3230,103.8500,'Central'],'Thomson':[1.3420,103.8300,'Central'],
+  'HarbourFront':[1.2650,103.8200,'Central'],'Sentosa':[1.2500,103.8250,'Central'],'Kallang & Dakota':[1.3080,103.8800,'Central'],
+  'Katong & Joo Chiat':[1.3060,103.9030,'East'],'East Coast':[1.3030,103.9200,'East'],'Bedok':[1.3240,103.9300,'East'],
+  'Tampines':[1.3530,103.9440,'East'],'Changi':[1.3890,103.9880,'East'],'Pasir Ris':[1.3730,103.9490,'East'],'Sembawang':[1.4490,103.8200,'North'],'Sengkang':[1.3920,103.8950,'North-East'],'Choa Chu Kang':[1.3850,103.7450,'West'],
+  'Woodlands':[1.4360,103.7860,'North'],'Yishun':[1.4290,103.8350,'North'],'Mandai':[1.4040,103.7900,'North'],
+  'Serangoon':[1.3550,103.8700,'North-East'],'Hougang & Kovan':[1.3600,103.8880,'North-East'],'Punggol':[1.4050,103.9100,'North-East'],
+  'Ang Mo Kio & Bishan':[1.3620,103.8450,'North-East'],
+  'Jurong':[1.3400,103.7200,'West'],'Clementi':[1.3150,103.7650,'West'],'Pasir Panjang & Queenstown':[1.2850,103.7950,'West'],'Bukit Batok':[1.3500,103.7600,'West']
+};
+const REGIONS = ['Central','East','North','North-East','West'];
+const REGION_LABELS = [['CENTRAL',1.318,103.825],['EAST',1.352,103.945],['NORTH',1.43,103.80],['NORTH-EAST',1.385,103.885],['WEST',1.355,103.705]];
+
+/* ============ CATEGORIES & ICONS ============ */
+const ICON = {
+  eat:'<path d="M7 3v8M5 3v4a2 2 0 0 0 4 0V3M7 11v10M17 3c-2 0-3 2-3 5s1 4 3 4v9"/>',
+  see:'<path d="M3 21h18M5 21V10M19 21V10M9 21V10M15 21V10M2 10l10-6 10 6z"/>',
+  shop:'<path d="M5 8h14l-1 13H6L5 8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/>',
+  events:'<rect x="3" y="6" width="18" height="12" rx="2"/><path d="M14 6v12"/><path d="M7 10h3M7 14h3"/>',
+  do:'<path d="M12 3l6 9H6z"/><path d="M12 12v9M8 21h8"/>'
+};
+const CATS = {
+  eat:{name:'Eat',sub:'Hawkers, cafés, restaurants, bars',color:'#C2410C',tint:'#FBE3D3'},
+  see:{name:'See',sub:'Museums, landmarks, heritage',color:'#1D4ED8',tint:'#DDE6FB'},
+  shop:{name:'Shop',sub:'Malls, markets, indie streets',color:'#7C3AED',tint:'#EBE2FB'},
+  events:{name:'Events',sub:'Concerts, markets, exhibitions',color:'#BE185D',tint:'#F9DDEA'},
+  do:{name:'Do & Outdoors',sub:'Parks, trails, beaches, activities',color:'#15803D',tint:'#D9F0DF'}
+};
+const SUBS = {
+  eat:[['hawker','Hawker centres'],['cafe','Cafés'],['restaurant','Restaurants'],['bar','Bars']],
+  see:[['museum','Museums'],['landmark','Landmarks'],['temple','Places of worship'],['attraction','Attractions']],
+  shop:[['mall','Malls'],['market','Markets'],['street','Shopping streets']],
+  events:[['concert','Music'],['exhibition','Exhibitions'],['market','Markets & fairs'],['workshop','Workshops & tours']],
+  do:[['park','Parks'],['trail','Trails & nature'],['beach','Beaches & islands'],['activity','Activities']]
+};
+const ATTR = {indoor:'Indoor',outdoor:'Outdoor',family:'Family-friendly',dog:'Dog-friendly',access:'Wheelchair accessible',business:'Good for business',date:'Date night',late:'Late night',veg:'Vegetarian',groups:'Good for groups'};
+const CUISINES = ['local','chinese','indian','malay','peranakan','japanese','seafood','western','cafe'];
+const icon = (c, s=18) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICON[c]}</svg>`;
+
+/* ============ PLACES (seed data) ============
+   [id, name, cat, sub, typeLabel, area, lat, lng, price(0=free), attrs, description, extra]
+   Locations approximate. Descriptions AI-written from general public facts. */
+const RAW = [
+ // --- Eat: hawker centres
+ ['tiong-bahru-market','Tiong Bahru Market','eat','hawker','Hawker centre','Tiong Bahru',1.2852,103.8326,1,'family groups','Two-storey market with a cooked-food centre upstairs, in the heart of the 1930s Tiong Bahru estate.',{cu:['local'],url:'https://www.nea.gov.sg'}],
+ ['maxwell','Maxwell Food Centre','eat','hawker','Hawker centre','Chinatown',1.2803,103.8447,1,'groups','Compact Chinatown hawker centre, well known for its Hainanese chicken rice stalls.',{cu:['local','chinese']}],
+ ['lau-pa-sat','Lau Pa Sat','eat','hawker','Hawker centre','Marina Bay',1.2806,103.8504,1,'late groups','Victorian cast-iron market hall in the CBD; the next street becomes a satay strip in the evenings.',{cu:['local'],rec:'National monument'}],
+ ['chinatown-complex','Chinatown Complex Food Centre','eat','hawker','Hawker centre','Chinatown',1.2823,103.8430,1,'groups','One of Singapore’s largest hawker centres, above a wet market in Chinatown.',{cu:['local','chinese']}],
+ ['old-airport-road','Old Airport Road Food Centre','eat','hawker','Hawker centre','Kallang & Dakota',1.3080,103.8856,1,'groups','Large, long-running hawker centre in Dakota with many well-known stalls.',{cu:['local'],closure:true}],
+ ['newton','Newton Food Centre','eat','hawker','Hawker centre','Novena & Balestier',1.3121,103.8395,2,'late outdoor groups','Open-air hawker centre at Newton Circus, popular for seafood and satay in the evening.',{cu:['local','seafood'],closure:true}],
+ ['amoy-street','Amoy Street Food Centre','eat','hawker','Hawker centre','Chinatown',1.2794,103.8466,1,'','CBD hawker centre in Tanjong Pagar, busiest at weekday lunch.',{cu:['local']}],
+ ['hong-lim','Hong Lim Market & Food Centre','eat','hawker','Hawker centre','Chinatown',1.2852,103.8457,1,'','Hawker centre in a Chinatown housing block, known for its noodle stalls.',{cu:['local','chinese']}],
+ ['east-coast-lagoon','East Coast Lagoon Food Village','eat','hawker','Hawker centre','East Coast',1.3067,103.9343,1,'outdoor family late groups','Beachside hawker centre in East Coast Park; a classic stop after a cycle or BBQ.',{cu:['local','seafood']}],
+ ['bedok-85','Bedok 85 Fengshan Market & Food Centre','eat','hawker','Hawker centre','Bedok',1.3320,103.9387,1,'late','Neighbourhood hawker centre in Bedok, popular for late-night suppers.',{cu:['local']}],
+ ['chomp-chomp','Chomp Chomp Food Centre','eat','hawker','Hawker centre','Serangoon',1.3644,103.8665,1,'late outdoor','Evening-focused hawker centre in Serangoon Gardens.',{cu:['local']}],
+ ['adam-road','Adam Road Food Centre','eat','hawker','Hawker centre','Bukit Timah',1.3240,103.8140,1,'','Small hawker centre on Adam Road, known for nasi lemak and Malay food.',{cu:['local','malay']}],
+ ['golden-mile-fc','Golden Mile Food Centre','eat','hawker','Hawker centre','Bugis & Kampong Glam',1.3030,103.8640,1,'','Beach Road hawker centre with a wide range of local dishes.',{cu:['local']}],
+ ['tekka','Tekka Centre','eat','hawker','Hawker centre','Little India',1.3064,103.8507,1,'veg groups','Little India market and food centre, strong on Indian and Indian-Muslim dishes.',{cu:['local','indian']}],
+ ['abc-brickworks','ABC Brickworks Market & Food Centre','eat','hawker','Hawker centre','Pasir Panjang & Queenstown',1.2869,103.8085,1,'','Neighbourhood hawker centre in Bukit Merah.',{cu:['local']}],
+ ['ghim-moh','Ghim Moh Market & Food Centre','eat','hawker','Hawker centre','Holland & Dempsey',1.3109,103.7881,1,'','Neighbourhood hawker centre near Holland Village.',{cu:['local'],closure:true}],
+ ['whampoa','Whampoa Makan Place','eat','hawker','Hawker centre','Novena & Balestier',1.3227,103.8550,1,'','Pair of neighbourhood food centres in Whampoa, off Balestier Road.',{cu:['local']}],
+ ['yishun-park-hc','Yishun Park Hawker Centre','eat','hawker','Hawker centre','Yishun',1.4268,103.8370,1,'family access','Modern hawker centre beside Yishun Park.',{cu:['local']}],
+ ['jurong-west-505','Jurong West 505 Market & Food Centre','eat','hawker','Hawker centre','Jurong',1.3500,103.7180,1,'','Neighbourhood hawker centre in Jurong West.',{cu:['local']}],
+ ['kovan-209','Kovan 209 Market & Food Centre','eat','hawker','Hawker centre','Hougang & Kovan',1.3590,103.8870,1,'','Neighbourhood hawker centre in Kovan.',{cu:['local']}],
+ ['changi-village-hc','Changi Village Hawker Centre','eat','hawker','Hawker centre','Changi',1.3891,103.9877,1,'outdoor family','Hawker centre near Changi Point Ferry Terminal, known for nasi lemak.',{cu:['local','malay']}],
+ ['haig-road','Haig Road Market & Food Centre','eat','hawker','Hawker centre','Katong & Joo Chiat',1.3138,103.8985,1,'','Neighbourhood hawker centre near Geylang Serai.',{cu:['local','malay']}],
+ ['beauty-world-fc','Bukit Timah Market & Food Centre','eat','hawker','Hawker centre','Bukit Timah',1.3405,103.7760,1,'','Hawker centre near Beauty World, at the foot of Bukit Timah.',{cu:['local']}],
+ ['marine-parade-fc','Marine Parade Central Market & Food Centre','eat','hawker','Hawker centre','East Coast',1.3025,103.9070,1,'','Neighbourhood hawker centre in Marine Parade.',{cu:['local']}],
+ ['zion-riverside','Zion Riverside Food Centre','eat','hawker','Hawker centre','River Valley',1.2925,103.8310,1,'','Riverside hawker centre in River Valley.',{cu:['local']}],
+ ['pasir-panjang-fc','Pasir Panjang Food Centre','eat','hawker','Hawker centre','Pasir Panjang & Queenstown',1.2763,103.7914,1,'late','Seafood-leaning hawker centre on Pasir Panjang Road.',{cu:['local','seafood']}],
+ ['satay-by-the-bay','Satay by the Bay','eat','hawker','Food centre','Marina Bay',1.2826,103.8695,2,'outdoor family late','Food centre at Gardens by the Bay with bay views and satay stalls.',{cu:['local']}],
+ // --- Eat: cafés, restaurants, bars
+ ['common-man','Common Man Coffee Roasters','eat','cafe','Café','River Valley',1.2915,103.8395,2,'business groups','Specialty coffee roaster and all-day café on Martin Road.',{cu:['cafe','western']}],
+ ['tiong-bahru-bakery','Tiong Bahru Bakery','eat','cafe','Bakery café','Tiong Bahru',1.2840,103.8315,2,'','French-style bakery café in the Tiong Bahru estate.',{cu:['cafe']}],
+ ['chye-seng-huat','Chye Seng Huat Hardware','eat','cafe','Café','Little India',1.3125,103.8580,2,'','Café and coffee roastery in a converted hardware shop in Jalan Besar.',{cu:['cafe']}],
+ ['ps-cafe-dempsey','PS.Cafe Harding Road','eat','restaurant','Restaurant','Holland & Dempsey',1.3050,103.8110,3,'date groups dog','All-day restaurant surrounded by greenery at Dempsey.',{cu:['western']}],
+ ['jumbo-ecsc','JUMBO Seafood (East Coast)','eat','restaurant','Seafood restaurant','East Coast',1.3046,103.9300,3,'groups business family','Seafood restaurant at the East Coast Seafood Centre, known for chilli crab.',{cu:['seafood','chinese']}],
+ ['song-fa','Song Fa Bak Kut Teh (New Bridge Road)','eat','restaurant','Restaurant','Chinatown',1.2891,103.8470,2,'family','Bak kut teh (peppery pork rib soup) specialist near Clarke Quay.',{cu:['chinese','local']}],
+ ['328-katong-laksa','328 Katong Laksa','eat','restaurant','Local eatery','Katong & Joo Chiat',1.3060,103.9050,1,'','Laksa shop on East Coast Road.',{cu:['local']}],
+ ['komala-vilas','Komala Vilas','eat','restaurant','Restaurant','Little India',1.3063,103.8525,1,'veg family','Long-running South Indian vegetarian restaurant on Serangoon Road.',{cu:['indian'],vegSource:true}],
+ ['zam-zam','Zam Zam','eat','restaurant','Restaurant','Bugis & Kampong Glam',1.3025,103.8589,1,'late','Murtabak and biryani restaurant opposite Sultan Mosque.',{cu:['indian','local']}],
+ ['candlenut','Candlenut','eat','restaurant','Restaurant','Holland & Dempsey',1.3040,103.8100,4,'business date','Fine-dining Peranakan restaurant at Dempsey.',{cu:['peranakan']}],
+ ['ya-kun-china-st','Ya Kun Kaya Toast (Far East Square)','eat','cafe','Kopitiam','Chinatown',1.2840,103.8483,1,'business','Original outlet of the kaya toast and kopi chain.',{cu:['local','cafe']}],
+ ['atlas-bar','Atlas','eat','bar','Bar','Bugis & Kampong Glam',1.3011,103.8587,4,'late date business','Art-deco bar in Parkview Square, known for its large gin collection.',{cu:['western']}],
+ // --- Eat: clearly labelled sample listings (to exercise filters)
+ ['sample-japanese-orchard','Sample listing — Japanese restaurant','eat','restaurant','Restaurant (sample)','Orchard',1.3030,103.8340,2,'business date','Placeholder listing to demonstrate cuisine, price and area filters. Not a real business.',{cu:['japanese'],sample:true,r:4.5,rc:140}],
+ ['sample-ramen-orchard','Sample listing — ramen bar','eat','restaurant','Restaurant (sample)','Orchard',1.3015,103.8375,1,'late','Placeholder listing. Not a real business.',{cu:['japanese'],sample:true,r:4.7,rc:64}],
+ ['sample-business-mb','Sample listing — business lunch restaurant','eat','restaurant','Restaurant (sample)','Marina Bay',1.2820,103.8540,3,'business indoor','Placeholder listing to demonstrate the business filter. Not a real business.',{cu:['western'],sample:true,r:4.3,rc:320}],
+ ['sample-dog-cafe-east','Sample listing — dog-friendly café','eat','cafe','Café (sample)','Katong & Joo Chiat',1.3080,103.9010,2,'dog outdoor','Placeholder listing to demonstrate the dog-friendly filter. Not a real business.',{cu:['cafe'],sample:true,r:4.6,rc:87}],
+ // --- See
+ ['national-gallery','National Gallery Singapore','see','museum','Art museum','Civic District',1.2903,103.8515,2,'indoor family access','Largest public collection of Singapore and Southeast Asian modern art, in the former City Hall and Supreme Court.',{rec:'Housed in two national monuments',url:'https://www.nationalgallery.sg',big:true}],
+ ['gardens-by-the-bay','Gardens by the Bay','see','attraction','Gardens','Marina Bay',1.2816,103.8636,0,'outdoor family access date','Waterfront gardens with the Supertree Grove (free outdoor areas; the conservatories are ticketed).',{url:'https://www.gardensbythebay.com.sg',big:true}],
+ ['mbs-skypark','Marina Bay Sands SkyPark Observation Deck','see','landmark','Observation deck','Marina Bay',1.2834,103.8607,3,'date family','Observation deck on top of Marina Bay Sands.',{big:true}],
+ ['merlion-park','Merlion Park','see','landmark','Landmark','Marina Bay',1.2868,103.8545,0,'outdoor family date','Home of the Merlion statue, facing Marina Bay.',{big:true}],
+ ['national-museum','National Museum of Singapore','see','museum','History museum','Civic District',1.2966,103.8485,2,'indoor family access','Singapore’s oldest museum, focused on the country’s history.',{rec:'National monument',big:true}],
+ ['acm','Asian Civilisations Museum','see','museum','Museum','Civic District',1.2875,103.8514,2,'indoor family','Museum of pan-Asian cultures on the Singapore River.',{rec:'Empress Place Building — national monument'}],
+ ['artscience','ArtScience Museum','see','museum','Museum','Marina Bay',1.2863,103.8593,3,'indoor family','Lotus-shaped museum for art, science and technology exhibitions.',{big:true}],
+ ['peranakan-museum','Peranakan Museum','see','museum','Museum','Civic District',1.2944,103.8490,2,'indoor','Museum of Peranakan culture on Armenian Street.',{}],
+ ['sri-mariamman','Sri Mariamman Temple','see','temple','Hindu temple','Chinatown',1.2826,103.8453,0,'','Singapore’s oldest Hindu temple, on South Bridge Road.',{rec:'National monument'}],
+ ['buddha-tooth','Buddha Tooth Relic Temple','see','temple','Buddhist temple','Chinatown',1.2814,103.8443,0,'indoor','Tang-style Buddhist temple and museum in Chinatown.',{big:true}],
+ ['sultan-mosque','Sultan Mosque','see','temple','Mosque','Bugis & Kampong Glam',1.3022,103.8589,0,'','Golden-domed mosque at the heart of Kampong Glam.',{rec:'National monument'}],
+ ['thian-hock-keng','Thian Hock Keng Temple','see','temple','Chinese temple','Chinatown',1.2808,103.8476,0,'','One of Singapore’s oldest Hokkien temples, on Telok Ayer Street.',{rec:'National monument'}],
+ ['singapore-zoo','Singapore Zoo','see','attraction','Zoo','Mandai',1.4043,103.7930,4,'outdoor family access','Open-concept zoo in the Mandai wildlife precinct.',{url:'https://www.mandai.com',big:true}],
+ ['night-safari','Night Safari','see','attraction','Wildlife park','Mandai',1.4022,103.7880,4,'outdoor family late','Nocturnal wildlife park next to the zoo.',{url:'https://www.mandai.com',big:true}],
+ ['bird-paradise','Bird Paradise','see','attraction','Bird park','Mandai',1.4060,103.7865,4,'outdoor family','Bird park in the Mandai wildlife precinct.',{url:'https://www.mandai.com',big:true}],
+ ['haw-par-villa','Haw Par Villa','see','attraction','Theme park','Pasir Panjang & Queenstown',1.2830,103.7820,0,'outdoor family','Free-entry park of statues and dioramas from Chinese folklore.',{}],
+ ['singapore-flyer','Singapore Flyer','see','landmark','Observation wheel','Marina Bay',1.2893,103.8631,3,'date family','Giant observation wheel overlooking Marina Bay.',{big:true}],
+ ['esplanade','Esplanade – Theatres on the Bay','see','landmark','Performing arts centre','Civic District',1.2898,103.8555,0,'indoor family access','Performing arts centre on Marina Bay with frequent free performances.',{url:'https://www.esplanade.com',big:true}],
+ ['uss','Universal Studios Singapore','see','attraction','Theme park','Sentosa',1.2540,103.8238,4,'outdoor family','Movie theme park at Resorts World Sentosa.',{big:true}],
+ ['botanic-gardens','Singapore Botanic Gardens','see','attraction','Gardens','Holland & Dempsey',1.3138,103.8159,0,'outdoor family dog access','160-year-old tropical garden with the National Orchid Garden (ticketed) inside.',{rec:'UNESCO World Heritage Site',url:'https://www.nparks.gov.sg',big:true}],
+ // --- Shop
+ ['ion-orchard','ION Orchard','shop','mall','Mall','Orchard',1.3040,103.8318,3,'indoor access','Large mall above Orchard MRT with luxury and high-street brands.',{url:'https://www.ionorchard.com',big:true}],
+ ['ngee-ann-city','Ngee Ann City','shop','mall','Mall','Orchard',1.3025,103.8345,3,'indoor access','Orchard Road mall anchored by a department store and a large bookshop.',{big:true}],
+ ['tangs','TANGS Orchard','shop','mall','Department store','Orchard',1.3049,103.8331,3,'indoor','Long-running Singaporean department store at the Orchard–Scotts junction.',{}],
+ ['jewel','Jewel Changi Airport','shop','mall','Mall','Changi',1.3602,103.9897,2,'indoor family access','Nature-themed mall at Changi Airport, around the Rain Vortex indoor waterfall.',{url:'https://www.jewelchangiairport.com',big:true}],
+ ['vivocity','VivoCity','shop','mall','Mall','HarbourFront',1.2643,103.8222,2,'indoor family access','Waterfront mall at HarbourFront, the gateway to Sentosa.',{big:true}],
+ ['haji-lane','Haji Lane','shop','street','Shopping street','Bugis & Kampong Glam',1.3006,103.8587,2,'outdoor date','Narrow lane of independent boutiques, cafés and street art in Kampong Glam.',{big:true}],
+ ['mustafa','Mustafa Centre','shop','mall','Department store','Little India',1.3099,103.8556,1,'indoor late','Sprawling department store in Little India selling almost everything.',{}],
+ ['bugis-street','Bugis Street','shop','market','Street market','Bugis & Kampong Glam',1.3007,103.8549,1,'indoor','Covered street market with budget fashion and souvenirs.',{big:true}],
+ ['funan','Funan','shop','mall','Mall','Civic District',1.2913,103.8497,2,'indoor family access','Lifestyle and tech mall with an indoor climbing wall.',{}],
+ ['chinatown-street-market','Chinatown Street Market','shop','market','Street market','Chinatown',1.2837,103.8443,1,'outdoor family','Souvenir stalls along Pagoda, Trengganu and Sago Streets.',{}],
+ ['tampines-mall','Tampines Mall','shop','mall','Mall','Tampines',1.3525,103.9446,2,'indoor family access','Regional mall at Tampines MRT.',{}],
+ ['jurong-point','Jurong Point','shop','mall','Mall','Jurong',1.3397,103.7066,2,'indoor family access','Large suburban mall at Boon Lay.',{}],
+ ['northpoint-city','Northpoint City','shop','mall','Mall','Yishun',1.4294,103.8355,2,'indoor family access','Regional mall in Yishun.',{}],
+ ['nex','nex','shop','mall','Mall','Serangoon',1.3507,103.8723,2,'indoor family access','Regional mall above Serangoon MRT with a rooftop play area.',{}],
+ ['dempsey-hill','Dempsey Hill','shop','street','Lifestyle enclave','Holland & Dempsey',1.3046,103.8095,3,'date outdoor','Former army barracks turned into restaurants, bars and shops.',{}],
+ // --- Do & Outdoors
+ ['macritchie','MacRitchie Reservoir Park','do','trail','Nature trails','Thomson',1.3420,103.8330,0,'outdoor','Forest trails around the reservoir, including the TreeTop Walk suspension bridge.',{big:true}],
+ ['southern-ridges','Southern Ridges (Henderson Waves)','do','trail','Trail','HarbourFront',1.2757,103.8155,0,'outdoor dog','About 10 km of linked parks and bridges from Mount Faber to Kent Ridge, including Henderson Waves.',{big:true}],
+ ['bukit-timah-nr','Bukit Timah Nature Reserve','do','trail','Nature reserve','Bukit Timah',1.3540,103.7760,0,'outdoor','Primary rainforest and Bukit Timah Hill, Singapore’s highest natural point.',{}],
+ ['east-coast-park','East Coast Park','do','beach','Coastal park','East Coast',1.3008,103.9120,0,'outdoor family dog','Long coastal park for cycling, BBQ pits and beaches.',{big:true}],
+ ['pulau-ubin','Pulau Ubin','do','beach','Island','Changi',1.4044,103.9625,0,'outdoor family','Island reached by bumboat from Changi Point, with cycling trails and the Chek Jawa wetlands.',{}],
+ ['sungei-buloh','Sungei Buloh Wetland Reserve','do','trail','Wetland reserve','Woodlands',1.4466,103.7300,0,'outdoor family','Mangrove and wetland reserve known for migratory shorebirds.',{}],
+ ['jurong-lake-gardens','Jurong Lake Gardens','do','park','Park','Jurong',1.3380,103.7290,0,'outdoor family dog access','Lakeside national gardens with a large nature playground.',{}],
+ ['coney-island','Coney Island Park','do','beach','Island park','Punggol',1.4085,103.9210,0,'outdoor','Rustic island park with beaches and trails, linked to Punggol by bridges.',{}],
+ ['punggol-waterway','Punggol Waterway Park','do','park','Park','Punggol',1.4100,103.9050,0,'outdoor family dog access','Waterfront park along the Punggol Waterway.',{}],
+ ['bishan-amk-park','Bishan-Ang Mo Kio Park','do','park','Park','Ang Mo Kio & Bishan',1.3627,103.8435,0,'outdoor family dog','Large park built around a naturalised river.',{}],
+ ['labrador','Labrador Nature Reserve','do','trail','Nature reserve','Pasir Panjang & Queenstown',1.2660,103.8025,0,'outdoor','Coastal reserve with WWII relics and a seaside boardwalk.',{}],
+ ['west-coast-park','West Coast Park','do','park','Park','Clementi',1.2960,103.7640,0,'outdoor family dog','Large park with a big adventure playground.',{}],
+ ['palawan-beach','Palawan Beach','do','beach','Beach','Sentosa',1.2485,103.8210,0,'outdoor family','Family beach on Sentosa with a suspension bridge to a small islet.',{}],
+ ['rail-corridor','Rail Corridor (Bukit Timah Railway Station)','do','trail','Trail','Bukit Timah',1.3410,103.7725,0,'outdoor dog family','Long green trail along the former KTM railway line.',{}],
+ ['fort-canning','Fort Canning Park','do','park','Park','Civic District',1.2948,103.8460,0,'outdoor family dog','Historic hilltop park with gardens and colonial-era landmarks.',{big:true}],
+ ['river-cruise','Singapore River cruise','do','activity','Boat ride','Civic District',1.2890,103.8465,2,'outdoor family date','Bumboat rides along the Singapore River past Boat Quay to Marina Bay.',{}],
+ ['chestnut-np','Chestnut Nature Park','do','trail','Nature park','Bukit Batok',1.3780,103.7720,0,'outdoor','Nature park with separate hiking and mountain-bike trails.',{}]
+];
+
+/* ============ HELPERS ============ */
+const $ = (s, r=document) => r.querySelector(s);
+const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function hash(str){let x=2166136261;for(let i=0;i<str.length;i++){x^=str.charCodeAt(i);x=Math.imul(x,16777619)}return (x>>>0)/4294967295}
+const TODAY = (()=>{const d=new Date();d.setHours(0,0,0,0);return d})();
+const addDays = (d,n) => {const x=new Date(d);x.setDate(x.getDate()+n);return x};
+const fmtD = d => d.toLocaleDateString('en-SG',{weekday:'short',day:'numeric',month:'short'});
+const DOW = TODAY.getDay();
+const WK_START = DOW===6 ? TODAY : DOW===0 ? addDays(TODAY,-1) : addDays(TODAY,6-DOW);
+const WK_END = addDays(WK_START,1);
+function distKm(a,b){const R=6371,toR=Math.PI/180;const dLat=(b[0]-a[0])*toR,dLng=(b[1]-a[1])*toR;const s=Math.sin(dLat/2)**2+Math.cos(a[0]*toR)*Math.cos(b[0]*toR)*Math.sin(dLng/2)**2;return 2*R*Math.asin(Math.sqrt(s))}
+const store = {
+  get(k,def){try{const v=localStorage.getItem(k);return v==null?def:JSON.parse(v)}catch(e){return def}},
+  set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+};
+
+/* ============ BUILD ITEMS ============ */
+function seedPlaces(){ return RAW.map(r => {
+  const [id,n,c,sub,type,a,lat,lng,p,attrs,d,x] = r;
+  const at = attrs ? attrs.split(' ') : [];
+  let lo=Math.log(25), hi=Math.log(2500);
+  if (x.big){lo=Math.log(3000);hi=Math.log(60000)} else if (sub==='hawker'){lo=Math.log(300);hi=Math.log(8000)}
+  const rating = x.r ?? Math.round((3.9 + hash(id+'r')*0.9)*10)/10;
+  const rc = x.rc ?? Math.round(Math.exp(lo + hash(id+'c')*(hi-lo)));
+  return {kind:'place',id,n,c,sub,type,a,lat,lng,p,at,d,cu:x.cu||[],url:x.url||'',rec:x.rec||'',sample:!!x.sample,vegSource:!!x.vegSource,
+    closure: x.closure ? `Closed for cleaning ${fmtD(addDays(TODAY,1))} – ${fmtD(addDays(TODAY,4))} (sample)` : '',
+    r:rating, rc, checked: addDays(TODAY,-Math.round(hash(id+'k')*20)), region: AREAS[a][2], sources:['Prototype seed (hand-entered)'], attrSrc:null, ratingSample:true};
+}); }
+let PLACES=[], BYID={}, EVENTS=[], ITEMS=[], ITEMBY={}, LIVE=[], DATA_META=null, DATA_MODE='seed';
+
+// Sample events: dates are relative to today so the prototype always has "this weekend" content.
+function dayOf(spec){
+  if (spec==='sat') return WK_START; if (spec==='sun') return WK_END;
+  if (spec==='nsat') return addDays(WK_START,7); if (spec==='nsun') return addDays(WK_END,7);
+  return addDays(TODAY, parseInt(spec,10));
+}
+const EVRAW = [
+ ['free-concert','Free evening concert (sample)','concert','esplanade','sun',0,'7:30pm–9pm',0,'outdoor family','A free outdoor performance at the waterfront theatre.'],
+ ['night-market','Weekend night market (sample)','market','tiong-bahru-market','sat',1,'6pm–11pm',0,'outdoor family','Food and craft stalls over two evenings.'],
+ ['picnic-movie','Picnic movie night (sample)','concert','fort-canning','nsat',0,'7pm–10pm',2,'outdoor family date','Outdoor film screening on the lawn. Bring a mat.'],
+ ['craft-fair','Makers’ craft fair (sample)','market','haji-lane','sun',0,'11am–6pm',0,'outdoor','Independent makers selling prints, ceramics and accessories.'],
+ ['heritage-walk','Guided heritage walk (sample)','workshop','tiong-bahru-market','sun',0,'9am–11am',2,'outdoor','A two-hour walk through the 1930s estate.'],
+ ['art-exhibit','Contemporary art exhibition (sample)','exhibition','national-gallery','-10',45,'10am–7pm',2,'indoor access','A long-running gallery exhibition.'],
+ ['science-workshop','Family science workshop (sample)','workshop','artscience','nsun',0,'2pm–4pm',2,'indoor family','Hands-on workshop for children aged 6–12.'],
+ ['sunrise-walk','Sunrise nature walk (sample)','workshop','sungei-buloh','nsat',0,'7am–9am',0,'outdoor family','Guided early-morning walk to spot shorebirds.'],
+ ['supertree-music','Live music at the Supertree Grove (sample)','concert','gardens-by-the-bay','0',0,'8pm–9pm',0,'outdoor family date','Free evening music in the gardens.'],
+ ['east-coast-food-fest','Seaside food festival (sample)','market','east-coast-park','3',3,'5pm–11pm',0,'outdoor family','Food trucks and live music by the beach.'],
+ ['indie-film','Indie film night (sample)','exhibition','funan','4',0,'8pm–10pm',2,'indoor','Short films by local directors.'],
+ ['flea-vivo','Weekend flea market (sample)','market','vivocity','nsat',1,'12pm–9pm',0,'indoor family','Pre-loved fashion and collectibles.'],
+ ['dog-meetup','Dog-friendly morning meetup (sample)','workshop','west-coast-park','sun',0,'8am–10am',0,'outdoor dog family','A casual meetup at the dog run.'],
+ ['kids-stories','Kids’ storytelling morning (sample)','workshop','national-museum','nsun',0,'10:30am–11:30am',0,'indoor family','Stories and crafts for young children.'],
+ ['past-gig','Last week’s rooftop gig (sample)','concert','esplanade','-8',0,'8pm',2,'outdoor','This event has ended — it should never appear (auto-expiry demo).']
+];
+function seedEvents(){ return EVRAW.map(([id,n,sub,venue,spec,dur,time,p,attrs,d]) => {
+  const v = BYID[venue], start = dayOf(spec), end = addDays(start,dur);
+  return {kind:'event',id,n,c:'events',sub,type:SUBS.events.find(s=>s[0]===sub)[1],venue,venueName:v.n,a:v.a,lat:v.lat,lng:v.lng,p,at:attrs.split(' '),d,time,start,end,
+    region:v.region,past:end<TODAY,cu:[],rec:'',url:'',sample:true,r:null,rc:null,checked:addDays(TODAY,-1),sources:['Sample event']};
+}); }
+const pDate = s => { const [y,m,d] = s.split('-').map(Number); return new Date(y, m-1, d); };
+function placeFromJson(p){
+  if (!AREAS[p.area]) p.area = 'Civic District';
+  const cl = p.closure ? `Closed for cleaning ${fmtD(pDate(p.closure.start))} – ${fmtD(pDate(p.closure.end))}` : '';
+  return {kind:'place',id:p.id,n:p.name,c:p.cat,sub:p.sub,type:p.type,a:p.area,lat:p.lat,lng:p.lng,p:p.price,at:Object.keys(p.attrs||{}),attrSrc:p.attrs||{},
+    d:p.desc||'',cu:p.cuisine||[],url:p.website||'',rec:p.rec||'',sample:!!p.sample,closure:(cl && pDate(p.closure.end)>=TODAY)?cl:'',r:null,rc:null,
+    checked:pDate(p.checked),region:p.region,sources:p.sources||[]};
+}
+function eventFromJson(e){
+  const start=pDate(e.start), end=pDate(e.end);
+  return {kind:'event',id:e.id,n:e.name,c:'events',sub:e.sub,type:(SUBS.events.find(s=>s[0]===e.sub)||[0,'Event'])[1],venue:e.venue,venueName:e.venueName,
+    a:AREAS[e.area]?e.area:'Civic District',lat:e.lat,lng:e.lng,p:e.price,at:Object.keys(e.attrs||{}),attrSrc:e.attrs||{},d:e.desc||'',time:e.time||'',start,end,
+    region:e.region,past:end<TODAY,cu:[],rec:'',url:e.ticket||'',sample:false,r:null,rc:null,checked:TODAY,sources:[e.source?'Event listing':'Manual event']};
+}
+async function loadData(){
+  try {
+    const pr = await fetch('data/places.json', {cache:'no-cache'});
+    if (!pr.ok) throw new Error('no data');
+    const pj = await pr.json();
+    let ej = {events:[]};
+    try { const er = await fetch('data/events.json', {cache:'no-cache'}); if (er.ok) ej = await er.json(); } catch(_){}
+    PLACES = pj.places.map(placeFromJson); BYID = Object.fromEntries(PLACES.map(p=>[p.id,p]));
+    EVENTS = ej.events.map(eventFromJson); DATA_META = pj.meta; DATA_MODE = 'live';
+  } catch(e) {
+    PLACES = seedPlaces(); BYID = Object.fromEntries(PLACES.map(p=>[p.id,p])); EVENTS = seedEvents(); DATA_MODE = 'seed';
+  }
+  ITEMS = [...PLACES, ...EVENTS];
+  ITEMBY = Object.fromEntries(ITEMS.map(i=>[i.id,i]));
+  LIVE = ITEMS.filter(i=>!i.past);   // auto-expiry: past events are never shown
+  if (DATA_MODE==='live') $('.proto').innerHTML = `Early version — places from OpenStreetMap, NEA (data.gov.sg) and our own list, updated ${fmtD(new Date(DATA_META.built))}. Google ratings not connected yet. <a href="#sources">Sources</a>`;
+}
+
+/* ============ STATE ============ */
+let NEAR = store.get('wander_near','Tiong Bahru'); if (!AREAS[NEAR]) NEAR='Tiong Bahru';
+let SAVED = new Set(store.get('wander_saved',[]));
+const nearPt = () => [AREAS[NEAR][0], AREAS[NEAR][1]];
+const dist = it => distKm(nearPt(), [it.lat,it.lng]);
+function saveToggle(id){ SAVED.has(id)?SAVED.delete(id):SAVED.add(id); store.set('wander_saved',[...SAVED]); updateSavedCount(); toast(SAVED.has(id)?'Saved':'Removed from saved'); $$(`[data-save="${id}"]`).forEach(b=>{b.setAttribute('aria-pressed',SAVED.has(id));b.innerHTML=bookmarkSvg(SAVED.has(id))}); }
+function updateSavedCount(){ $('#savedCount').textContent = SAVED.size ? `(${SAVED.size})` : ''; }
+const blankF = () => ({q:'',cat:null,sub:null,cuisine:null,region:null,area:null,maxPrice:null,free:false,attrs:[],when:null,sort:'best',list:null,text:[],minRating:false,nearSort:false,maxPriceLabel:''});
+
+/* ============ PRICE / LABELS ============ */
+function priceLabel(it){
+  if (it.p==null) return 'Price not listed';
+  if (it.p===0) return it.c==='eat'?'$':'Free';
+  if (it.c==='eat'||it.c==='shop') return '$'.repeat(it.p);
+  return 'Ticketed · ' + '$'.repeat(it.p);
+}
+const bandFor = n => n<=15?1 : n<=40?2 : n<=80?3 : 4;
+function inWindow(it, w){
+  if (it.kind!=='event') return true;
+  let a=TODAY, b=TODAY;
+  if (w==='weekend'){ a = WK_START<TODAY?TODAY:WK_START; b = WK_END; }
+  else if (w==='next7'){ b = addDays(TODAY,6); }
+  else if (w==='all'){ return !it.past; }
+  return it.start<=b && it.end>=a;
+}
+const weekendLabel = () => (WK_START<TODAY ? `Today, ${fmtD(TODAY)}` : `${fmtD(WK_START)} – ${fmtD(WK_END)}`);
+
+/* ============ COLLECTIONS (published rules) ============ */
+const LISTS = {
+  'free-weekend':{name:'Free things to do this weekend',k:'Free · this weekend',color:'#C23B0B',rule:'Free entry, and for events, happening this weekend. Nearest first.',pred:i=>i.p===0&&i.c!=='eat'&&(i.kind!=='event'||inWindow(i,'weekend')),sort:'near'},
+  'hidden-gems':{name:'Hidden Gems',k:'Live · Google rating',color:'#C23B0B',rule:'Google rating 4.5 or higher with 20–150 reviews. In production this is checked live and never stored (sample ratings here).',pred:i=>i.kind==='place'&&i.r>=4.5&&i.rc>=20&&i.rc<=150,sort:'rating'},
+  'highest-rated':{name:'Highest rated',k:'Live · Google rating',color:'#1D4ED8',rule:'Google rating 4.5 or higher with 200+ reviews, sorted by rating. Live in production (sample ratings here).',pred:i=>i.kind==='place'&&i.r>=4.5&&i.rc>=200,sort:'rating'},
+  'rainy-day':{name:'Rainy-day plans',k:'Weather-proof',color:'#1D4ED8',rule:'Places and events tagged Indoor.',pred:i=>i.at.includes('indoor'),sort:'best'},
+  'hawker-closures':{name:'Hawker closures this week',k:'NEA open data',color:'#C2410C',rule:'From NEA’s official cleaning-closure schedule (sample dates in this prototype).',pred:i=>!!i.closure,sort:'near'},
+  'bring-the-dog':{name:'Bring the dog',k:'Attribute · source shown',color:'#15803D',rule:'Tagged dog-friendly. Each listing shows where that came from (sample attributes in this prototype).',pred:i=>i.at.includes('dog'),sort:'near'},
+  'officially-recognised':{name:'Officially recognised',k:'Official lists',color:'#1D4ED8',rule:'Named on an official register, such as national monuments or UNESCO World Heritage, stated as fact with the designation shown.',pred:i=>!!i.rec,sort:'near'},
+  'late-night':{name:'Late-night eats & places',k:'After 10pm',color:'#7C3AED',rule:'Tagged Late night (sample attributes in this prototype; opening hours load live in production).',pred:i=>i.at.includes('late'),sort:'near'}
+};
+
+/* ============ NATURAL-LANGUAGE SEARCH (keyword parser) ============ */
+const AREA_ALIASES = {'orchard road':'Orchard','orchard':'Orchard','marina bay':'Marina Bay','marina':'Marina Bay','cbd':'Marina Bay','raffles place':'Marina Bay','chinatown':'Chinatown','tanjong pagar':'Chinatown','tiong bahru':'Tiong Bahru','river valley':'River Valley','clarke quay':'Civic District','city hall':'Civic District','civic district':'Civic District','bugis':'Bugis & Kampong Glam','kampong glam':'Bugis & Kampong Glam','little india':'Little India','jalan besar':'Little India','bukit timah':'Bukit Timah','holland village':'Holland & Dempsey','holland':'Holland & Dempsey','dempsey':'Holland & Dempsey','novena':'Novena & Balestier','balestier':'Novena & Balestier','newton':'Novena & Balestier','thomson':'Thomson','harbourfront':'HarbourFront','sentosa':'Sentosa','kallang':'Kallang & Dakota','dakota':'Kallang & Dakota','katong':'Katong & Joo Chiat','joo chiat':'Katong & Joo Chiat','east coast':'East Coast','marine parade':'East Coast','bedok':'Bedok','tampines':'Tampines','changi':'Changi','woodlands':'Woodlands','yishun':'Yishun','mandai':'Mandai','serangoon':'Serangoon','hougang':'Hougang & Kovan','kovan':'Hougang & Kovan','punggol':'Punggol','ang mo kio':'Ang Mo Kio & Bishan','bishan':'Ang Mo Kio & Bishan','jurong':'Jurong','clementi':'Clementi','queenstown':'Pasir Panjang & Queenstown','pasir panjang':'Pasir Panjang & Queenstown','bukit batok':'Bukit Batok','pasir ris':'Pasir Ris','sembawang':'Sembawang','sengkang':'Sengkang','choa chu kang':'Choa Chu Kang'};
+const STOP = new Set('a an the in at on near around for with and or of to me some good best great nice places place things thing what where is are i we want looking find show spots spot that this any somewhere area options option establishments establishment locations location activities activity things-to-do do go visit can my our there which who you get try new open now'.split(' '));
+function parseQuery(q){
+  const F = blankF(); F.q = q;
+  let s = ' ' + q.toLowerCase().replace(/[’']/g,'').replace(/[^a-z0-9$\-\s]/g,' ') + ' ';
+  const take = (re, fn) => { s = s.replace(re, (...m) => { fn(...m); return ' '; }); };
+  const setCat = (c, sub) => { F.cat = c; if (sub) F.sub = sub; };
+  take(/\b(?:under|below|less than|max|cheaper than|within|up to)\s*\$?\s*(\d+)\b/g, (m,n) => { F.maxPrice = bandFor(+n); F.maxPriceLabel = `Under $${n}`; });
+  take(/\$\s*(\d+)\b/g, (m,n) => { F.maxPrice = bandFor(+n); F.maxPriceLabel = `Around $${n}`; });
+  take(/\b(free entry|free admission|free|no charge)\b/g, () => { F.free = true; });
+  take(/\b(cheap|budget|affordable|inexpensive)\b/g, () => { F.maxPrice = 1; F.maxPriceLabel = 'Budget'; });
+  take(/\bhidden gems?\b/g, () => { F.list = 'hidden-gems'; });
+  take(/\b(highly rated|top rated|highest rated|best rated|well rated|top)\b/g, () => { F.minRating = true; F.sort = 'rating'; });
+  take(/\b(near me|nearby|around me|close by)\b/g, () => { F.nearSort = true; F.sort = 'near'; });
+  take(/\b(this weekend|the weekend|weekend|saturday|sunday)\b/g, () => { F.when = 'weekend'; });
+  take(/\b(today|tonight)\b/g, () => { F.when = 'today'; });
+  take(/\b(this week|next 7 days|coming week|next week)\b/g, () => { F.when = 'next7'; });
+  take(/\b(dog[- ]?friendly|dogs?|pet[- ]?friendly|pets?)\b/g, () => F.attrs.push('dog'));
+  take(/\b(family[- ]?friendly|kid[- ]?friendly|child[- ]?friendly|families|family|kids?|children)\b/g, () => F.attrs.push('family'));
+  take(/\b(indoors?|rainy days?|rain[- ]?proof|rainy|when it rains|wet weather)\b/g, () => F.attrs.push('indoor'));
+  take(/\b(outdoors?|outside|open[- ]air|al fresco)\b/g, () => F.attrs.push('outdoor'));
+  take(/\b(wheelchair[- ]?(accessible|friendly)?|accessible|accessibility)\b/g, () => F.attrs.push('access'));
+  take(/\b(late[- ]?night|open late|late|supper|24 ?hours?|after midnight)\b/g, () => F.attrs.push('late'));
+  take(/\b(date night|date|romantic|couples?)\b/g, () => F.attrs.push('date'));
+  take(/\b(business (lunch(es)?|dinners?|meals?)|client (lunch(es)?|dinners?)|work lunch(es)?)\b/g, () => { F.attrs.push('business'); setCat('eat'); });
+  take(/\b(business[- ]friendly|business)\b/g, () => F.attrs.push('business'));
+  take(/\b(groups?|big group|large group)\b/g, () => F.attrs.push('groups'));
+  take(/\b(vegetarian|vegan|veg)\b/g, () => { F.attrs.push('veg'); setCat('eat'); });
+  take(/\b(night markets?|flea markets?|craft fairs?|fairs?)\b/g, () => setCat('events','market'));
+  take(/\b(concerts?|gigs?|live music|music)\b/g, () => setCat('events','concert'));
+  take(/\b(exhibitions?|exhibits?)\b/g, () => setCat('events','exhibition'));
+  take(/\b(workshops?|classes|tours?|walks? tours?)\b/g, () => setCat('events','workshop'));
+  take(/\b(events?|festivals?|shows?|happenings|whats on)\b/g, () => setCat('events'));
+  take(/\b(japanese|chinese|indian|malay|peranakan|seafood|western|local)\b/g, (m,c) => { F.cuisine = c; setCat('eat'); });
+  take(/\b(hawker centres?|hawker centers?|hawkers?|food courts?|food centres?)\b/g, () => setCat('eat','hawker'));
+  take(/\b(cafes?|coffee|bakery|bakeries|brunch)\b/g, () => setCat('eat','cafe'));
+  take(/\b(bars?|drinks|cocktails?|pubs?)\b/g, () => setCat('eat','bar'));
+  take(/\b(restaurants?|food|eat|eats|eating|dining|lunch|dinner|breakfast|makan|meals?)\b/g, () => { if (F.cat!=='eat') setCat('eat'); });
+  take(/\b(museums?|galleries|gallery)\b/g, () => setCat('see','museum'));
+  take(/\b(temples?|mosques?|churches?|places of worship)\b/g, () => setCat('see','temple'));
+  take(/\b(attractions?|sightseeing|sights|landmarks?|heritage|culture|cultural)\b/g, () => setCat('see'));
+  take(/\b(malls?|shopping centres?)\b/g, () => setCat('shop','mall'));
+  take(/\b(shopping|shops?|boutiques?|markets?|souvenirs?)\b/g, () => setCat('shop'));
+  take(/\b(parks?|gardens?)\b/g, () => setCat('do','park'));
+  take(/\b(trails?|hik(e|es|ing)|nature|walks?|treks?|cycling|bike)\b/g, () => setCat('do','trail'));
+  take(/\b(beach(es)?|islands?)\b/g, () => setCat('do','beach'));
+  Object.keys(AREA_ALIASES).sort((a,b)=>b.length-a.length).forEach(k => {
+    take(new RegExp('\\b'+k.replace(/ /g,'\\s+')+'\\b','g'), () => { F.area = AREA_ALIASES[k]; });
+  });
+  take(/\b(?:in the |the )?(north[- ]?east|northeast|north|east|west|central|centre|city|town)\b/g, (m,r) => {
+    r = r.replace(' ','-'); F.region = r==='northeast'||r==='north-east'?'North-East': r==='north'?'North': r==='east'?'East': r==='west'?'West':'Central';
+  });
+  F.text = s.split(/\s+/).filter(w => w.length>2 && !STOP.has(w) && !/^\d+$/.test(w));
+  if (F.list) F.sort = LISTS[F.list].sort;
+  return F;
+}
+
+/* ============ FILTER + RANK ============ */
+function textMatch(it, terms){
+  if (!terms.length) return true;
+  const hay = (it.n+' '+it.type+' '+it.d+' '+it.a+' '+it.cu.join(' ')+' '+it.sub).toLowerCase();
+  return terms.every(t => hay.includes(t) || hay.includes(t.replace(/s$/,'')));
+}
+function filterItems(F){
+  let out = LIVE.filter(it => {
+    if (F.list && !LISTS[F.list].pred(it)) return false;
+    if (F.cat && it.c!==F.cat) return false;
+    if (F.sub && it.sub!==F.sub) return false;
+    if (F.cuisine && !it.cu.includes(F.cuisine)) return false;
+    if (F.region && it.region!==F.region) return false;
+    if (F.area && it.a!==F.area && distKm([AREAS[F.area][0],AREAS[F.area][1]],[it.lat,it.lng])>2.2) return false;
+    if (F.free && it.p!==0) return false;
+    if (F.maxPrice!=null && (it.p==null || it.p>F.maxPrice)) return false;
+    for (const a of F.attrs) if (!it.at.includes(a)) return false;
+    if (F.when && it.kind==='event' && !inWindow(it,F.when)) return false;
+    if (F.minRating && !(it.kind==='place' && it.r>=4.5 && it.rc>=200)) return false;
+    if (!textMatch(it,F.text)) return false;
+    return true;
+  });
+  const sort = F.sort;
+  const best = it => {
+    const d = dist(it), comp = (it.d?0.4:0)+(it.url?0.3:0)+Math.min(it.at.length,3)*0.1;
+    const soon = it.kind==='event' && inWindow(it,'next7') ? 0.35 : 0;
+    return 1/(1+d/2) + comp*0.5 + soon - (it.sample&&it.kind==='place'?0.05:0);
+  };
+  if (sort==='near') out.sort((a,b)=>dist(a)-dist(b));
+  else if (sort==='rating') out.sort((a,b)=>(b.r??-1)-(a.r??-1) || (b.rc??0)-(a.rc??0));
+  else if (sort==='date') out.sort((a,b)=>(a.start||0)-(b.start||0));
+  else out.sort((a,b)=>best(b)-best(a));
+  return out;
+}
+
+/* ============ SHARED UI BITS ============ */
+const bookmarkSvg = on => `<svg width="20" height="20" viewBox="0 0 24 24" fill="${on?'currentColor':'none'}" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h12v18l-6-4-6 4z"/></svg>`;
+const saveBtn = id => `<button type="button" class="iconbtn" data-save="${id}" aria-pressed="${SAVED.has(id)}" aria-label="Save">${bookmarkSvg(SAVED.has(id))}</button>`;
+const href = it => `#${it.kind==='event'?'event':'place'}-${it.id}`;
+const gmaps = it => `https://www.google.com/maps/search/?api=1&query=${it.lat},${it.lng}`;
+function ratingHtml(it){
+  if (it.kind==='event') return `<span>${it.p===0?'Free':it.p==null?'Price not listed':'Ticketed · '+'$'.repeat(it.p)}</span>`;
+  if (it.r==null) return `<small>Google rating: coming soon</small> · ${esc(priceLabel(it))}`;
+  return `★ ${it.r.toFixed(1)} <small>(${it.rc.toLocaleString()}) Google · sample</small> · ${esc(priceLabel(it))}`;
+}
+function metaHtml(it){
+  const C = CATS[it.c];
+  const when = it.kind==='event' ? `${it.start.getTime()===it.end.getTime()?fmtD(it.start):fmtD(it.start)+' – '+fmtD(it.end)} · ${esc(it.time)} · ` : '';
+  return `<span class="c" style="color:${C.color}">${esc(C.name==='Do & Outdoors'?'Outdoors':C.name)}</span> · ${when}${esc(it.type)} · ${esc(it.a)} · ${dist(it).toFixed(1)} km`;
+}
+function tagsHtml(it){
+  const t = [];
+  if (it.closure) t.push(`<span class="tag warn">${esc(it.closure)}</span>`);
+  if (it.rec) t.push(`<span class="tag rec">${esc(it.rec)}</span>`);
+  if (it.kind==='event' && inWindow(it,'weekend')) t.push(`<span class="tag">This weekend</span>`);
+  if (it.p===0 && it.c!=='eat') t.push(`<span class="tag">Free</span>`);
+  it.at.slice(0,3).forEach(a => t.push(`<span class="tag">${esc(ATTR[a])}</span>`));
+  return t.slice(0,4).join('');
+}
+function thumbHtml(it, cls='thumb'){
+  const C = CATS[it.c];
+  return `<div class="${cls}" style="background:${C.tint};color:${C.color}">${icon(it.c,26)}<span>No licensed photo yet</span></div>`;
+}
+function attrSource(it, a){
+  if (it.attrSrc && it.attrSrc[a]) return [it.attrSrc[a].source, it.attrSrc[a].confidence];
+  if (a==='indoor'||a==='outdoor') return ['Inferred from place type','High'];
+  if (a==='veg' && it.vegSource) return ['Business website (to verify)','Medium'];
+  return ['Sample — to be verified','Sample'];
+}
+function attrTable(it){
+  if (!it.at.length) return '<p class="sub-muted">No attributes recorded yet.</p>';
+  return `<div class="tblwrap"><table class="attrtbl"><thead><tr><th>Attribute</th><th>Source</th><th>Confidence</th></tr></thead><tbody>${
+    it.at.map(a => { const [s,c] = attrSource(it,a); return `<tr><td>${esc(ATTR[a])}</td><td>${esc(s)}</td><td>${esc(c)}</td></tr>`; }).join('')}</tbody></table></div>`;
+}
+function cardHtml(it){
+  return `<article class="card" data-id="${it.id}">
+    ${thumbHtml(it)}
+    <div class="body">
+      <div class="top"><h3><a href="${href(it)}">${esc(it.n)}</a></h3>${saveBtn(it.id)}</div>
+      <div class="meta">${metaHtml(it)}</div>
+      <div class="rating">${ratingHtml(it)}</div>
+      <div class="tags">${tagsHtml(it)}</div>
+      <button type="button" class="more" aria-expanded="false" data-more="${it.id}">Details</button>
+      <div class="details" hidden>
+        ${it.d?`<p style="margin:0">${esc(it.d)}</p><div class="ai">${it.sources.includes('NEA via data.gov.sg')&&!it.sources.includes('Manual listing')?'From NEA’s official description.':'AI-written from listed facts — check before relying on it.'}</div>`:'<p class="sub-muted" style="margin:0">No description yet.</p>'}
+        ${attrTable(it)}
+        <div class="linkrow"><a class="btn small" href="${href(it)}">Full page</a><a class="btn small" href="${gmaps(it)}" target="_blank" rel="noopener">Directions</a>${it.url?`<a class="btn small" href="${esc(it.url)}" target="_blank" rel="noopener">Official site</a>`:''}</div>
+        <div class="sub-muted">Source: ${esc((it.sources||[]).join(', '))} · checked ${fmtD(it.checked)} · <button type="button" class="linkbtn" data-report="${it.id}" style="font-size:13px">Report an error</button></div>
+      </div>
+    </div>
+  </article>`;
+}
+const sponsorCard = () => `<article class="card sponsor" aria-label="Sponsored placement"><div class="thumb" style="background:#F6EFD9;color:#5E4100">Ad</div><div class="body"><span class="badge-sp">Sponsored</span><h3>[Sponsored slot — sample]</h3><div class="meta">Paid placement · never mixed into rankings or Collections</div></div></article>`;
+function toast(msg){ const t=document.createElement('div'); t.className='toast'; t.setAttribute('role','status'); t.textContent=msg; document.body.appendChild(t); setTimeout(()=>t.remove(),1800); }
+
+/* ============ MAP ============ */
+function MapView(el, opts={}){
+  const light = !!opts.light;
+  el.innerHTML = `<div class="map${light?' light':''}">
+    <svg aria-hidden="true"><g class="lg"><path class="land" d="${LAND}"/></g></svg>
+    <div class="pins"></div>
+    <div class="mapctl"><button type="button" data-z="in" aria-label="Zoom in">+</button><button type="button" data-z="out" aria-label="Zoom out">−</button><button type="button" data-z="fit" aria-label="Show all of Singapore" style="font-size:14px">⤢</button></div>
+    <div class="mappop" hidden></div>
+    <div class="mapattr">Illustrative map · Coastline © OpenStreetMap contributors · Google Maps in production</div>
+  </div>`;
+  const wrap = $('.map',el), svg=$('svg',el), g=$('.lg',el), pinsEl=$('.pins',el), pop=$('.mappop',el);
+  let W=1,H=1,s=1,cx=BW/2,cy=BH/2,fitS=1, items=[], sel=null, hl=null;
+  function fit(){ W=wrap.clientWidth||600; H=wrap.clientHeight||400; fitS=Math.min((W-30)/BW,(H-30)/BH); s=fitS; cx=BW/2; cy=BH/2; }
+  function clampS(v){ return Math.max(fitS*0.9, Math.min(fitS*16, v)); }
+  function render(){
+    W=wrap.clientWidth||W; H=wrap.clientHeight||H;
+    svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
+    g.setAttribute('transform',`translate(${W/2-cx*s} ${H/2-cy*s}) scale(${s})`);
+    const scr = it => [(PX(it.lng)-cx)*s+W/2, (PY(it.lat)-cy)*s+H/2];
+    let html = '';
+    if (s < fitS*2.3) REGION_LABELS.forEach(([t,la,ln]) => { html += `<span class="rlabel" style="left:${(PX(ln)-cx)*s+W/2}px;top:${(PY(la)-cy)*s+H/2}px">${t}</span>`; });
+    const cell = 40, groups = new Map();
+    items.forEach(it => {
+      const [x,y] = scr(it); if (x<-40||y<-40||x>W+40||y>H+40) return;
+      const key = (it.id===sel||it.id===hl) ? 'solo:'+it.id : Math.floor(x/cell)+':'+Math.floor(y/cell);
+      if (!groups.has(key)) groups.set(key,[]); groups.get(key).push({it,x,y});
+    });
+    groups.forEach(arr => {
+      if (arr.length===1){
+        const {it,x,y} = arr[0], C = CATS[it.c];
+        const cls = it.id===sel?' sel':it.id===hl?' hl':'';
+        html += `<button type="button" class="pin${cls}" data-pin="${it.id}" style="left:${x}px;top:${y}px;background:${C.color}" aria-label="${esc(it.n)} (${esc(C.name)})">${icon(it.c,15)}</button>`;
+      } else {
+        const x = arr.reduce((a,b)=>a+b.x,0)/arr.length, y = arr.reduce((a,b)=>a+b.y,0)/arr.length;
+        const counts = {}; arr.forEach(o=>counts[o.it.c]=(counts[o.it.c]||0)+1);
+        const dom = Object.entries(counts).sort((a,b)=>b[1]-a[1])[0][0];
+        const mixed = Object.keys(counts).length>1;
+        const size = Math.min(52, 30+Math.sqrt(arr.length)*5);
+        html += `<button type="button" class="cluster" data-cl="${x},${y}" style="left:${x}px;top:${y}px;width:${size}px;height:${size}px;background:${mixed?'#1C1B19':CATS[dom].color}" aria-label="${arr.length} places here — zoom in">${arr.length}</button>`;
+      }
+    });
+    pinsEl.innerHTML = html;
+  }
+  function zoomAt(sx, sy, f){
+    const wx=(sx-W/2)/s+cx, wy=(sy-H/2)/s+cy, s2=clampS(s*f);
+    cx = wx-(sx-W/2)/s2; cy = wy-(sy-H/2)/s2; s = s2; render();
+  }
+  function showPop(it){
+    const C = CATS[it.c];
+    pop.hidden = false;
+    pop.innerHTML = `<div class="sq" style="width:52px;height:52px;border-radius:10px;flex:none;display:flex;align-items:center;justify-content:center;background:${C.tint};color:${C.color}">${icon(it.c,22)}</div>
+      <div style="min-width:0;display:flex;flex-direction:column;gap:3px"><h3>${esc(it.n)}</h3><div class="meta" style="font-size:13px">${metaHtml(it)}</div><div class="rating" style="font-size:13px">${ratingHtml(it)}</div><a href="${href(it)}" style="font-size:13px;font-weight:600;color:var(--accent)">View details →</a></div>
+      <button type="button" class="iconbtn x" aria-label="Close">✕</button>`;
+    $('.x',pop).onclick = () => { sel=null; pop.hidden=true; render(); opts.onSelect && opts.onSelect(null); };
+  }
+  // interaction
+  const ptrs = new Map(); let pinch=null, moved=0, downTarget=null;
+  wrap.addEventListener('pointerdown', e => {
+    downTarget = e.target.closest('button'); moved = 0;
+    if (downTarget && downTarget.closest('.mapctl,.mappop')) return;
+    if (light && e.pointerType==='touch') return;
+    ptrs.set(e.pointerId,[e.clientX,e.clientY]);
+    try{ wrap.setPointerCapture(e.pointerId); }catch(_){}
+  });
+  wrap.addEventListener('pointermove', e => {
+    if (!ptrs.has(e.pointerId)) return;
+    const [px,py] = ptrs.get(e.pointerId); ptrs.set(e.pointerId,[e.clientX,e.clientY]);
+    if (ptrs.size===1){ const dx=e.clientX-px, dy=e.clientY-py; moved+=Math.abs(dx)+Math.abs(dy); cx-=dx/s; cy-=dy/s; render(); }
+    else if (ptrs.size===2){
+      const [a,b] = [...ptrs.values()]; const d=Math.hypot(a[0]-b[0],a[1]-b[1]); const r=wrap.getBoundingClientRect();
+      if (pinch) zoomAt((a[0]+b[0])/2-r.left,(a[1]+b[1])/2-r.top,d/pinch); pinch=d; moved=99;
+    }
+  });
+  const up = e => {
+    const wasDrag = moved>6; ptrs.delete(e.pointerId); if (ptrs.size<2) pinch=null;
+    if (wasDrag) return;
+    const t = downTarget; downTarget=null; if (!t) return;
+    if (t.dataset.pin){ sel=t.dataset.pin; render(); showPop(ITEMBY[sel]); opts.onSelect && opts.onSelect(sel); }
+    else if (t.dataset.cl){ const [x,y]=t.dataset.cl.split(',').map(Number); zoomAt(x,y,2.4); }
+  };
+  wrap.addEventListener('pointerup', up);
+  wrap.addEventListener('pointercancel', e => { ptrs.delete(e.pointerId); pinch=null; });
+  if (!light) wrap.addEventListener('wheel', e => { e.preventDefault(); const r=wrap.getBoundingClientRect(); zoomAt(e.clientX-r.left,e.clientY-r.top,e.deltaY<0?1.25:0.8); }, {passive:false});
+  $$('.mapctl button',el).forEach(b => b.addEventListener('click', () => {
+    if (b.dataset.z==='in') zoomAt(W/2,H/2,1.6); else if (b.dataset.z==='out') zoomAt(W/2,H/2,1/1.6); else { fit(); render(); }
+  }));
+  // keyboard activation of pins/clusters
+  pinsEl.addEventListener('keydown', e => { if ((e.key==='Enter'||e.key===' ') && e.target.closest('button')){ e.preventDefault(); downTarget=e.target.closest('button'); moved=0; up({pointerId:-1}); } });
+  const ro = new ResizeObserver(() => { const keep = s!==fitS; if (!keep) fit(); render(); }); ro.observe(wrap);
+  fit(); render();
+  return {
+    setItems(list){ items=list; if (sel && !list.find(i=>i.id===sel)){ sel=null; pop.hidden=true; } render(); },
+    highlight(id){ hl=id; render(); },
+    select(id, center){ sel=id; const it=ITEMBY[id]; if (center){ cx=PX(it.lng); cy=PY(it.lat); s=Math.max(s,fitS*5); } render(); showPop(it); },
+    focusOn(lat,lng,zoom){ cx=PX(lng); cy=PY(lat); s=clampS(fitS*zoom); render(); },
+    destroy(){ ro.disconnect(); }
+  };
+}
+
+/* ============ ROUTES ============ */
+const app = $('#app');
+let currentMap = null, currentMini = null;
+function cleanup(){ if (currentMap){currentMap.destroy();currentMap=null} if (currentMini){currentMini.destroy();currentMini=null} }
+let LAST_SEARCH = null;
+
+function renderHome(){
+  const wk = LIVE.filter(i=>i.kind==='event'&&inWindow(i,'weekend')).sort((a,b)=>a.start-b.start);
+  const evs = (wk.length>=4 ? wk : [...wk, ...LIVE.filter(i=>i.kind==='event'&&!wk.includes(i)).sort((a,b)=>a.start-b.start)]).slice(0,4);
+  const counts = Object.fromEntries(Object.keys(CATS).map(c=>[c, LIVE.filter(i=>i.c===c).length]));
+  const recs = recommended();
+  app.innerHTML = `<div class="container">
+    <section class="hero">
+      <div class="kicker">${esc(weekendLabel())} · near ${esc(NEAR)}</div>
+      <h1>What’s good this weekend?</h1>
+      ${searchForm('')}
+      <div class="pills" role="group" aria-label="When">
+        <a class="pill" href="#explore" data-when="today">Today</a>
+        <a class="pill on" href="#explore" data-when="weekend">This weekend</a>
+        <a class="pill" href="#explore" data-when="next7">Next 7 days</a>
+      </div>
+      ${examplesHtml()}
+    </section>
+    <section class="cats" aria-label="Categories">
+      ${Object.entries(CATS).map(([k,C]) => `<a class="cattile" href="#${k}" style="background:${C.tint}"><span class="ic" style="background:${C.color}">${icon(k,22)}</span><span><span class="nm">${esc(C.name)}</span><span class="sub">${esc(C.sub)} · ${counts[k]}</span></span></a>`).join('')}
+    </section>
+    <section class="sec" aria-label="Collections">
+      <div class="sec-h"><h2>This weekend’s lists</h2><a href="#lists">Every list follows a published rule →</a></div>
+      <div class="listgrid">
+        <a class="bigtile" href="#list-free-weekend">
+          <div class="ph">Cover image — official or licensed photos only</div>
+          <div><div class="k">Collection · ${filterItems({...blankF(),list:'free-weekend'}).length} picks</div><div class="t">${esc(LISTS['free-weekend'].name)}</div><div class="r">Rule: ${esc(LISTS['free-weekend'].rule)}</div></div>
+        </a>
+        ${['hidden-gems','rainy-day','hawker-closures','bring-the-dog','officially-recognised','late-night','highest-rated'].filter(id=>filterItems({...blankF(),list:id}).length).slice(0,4).map(smallTile).join('')}
+      </div>
+    </section>
+    <section class="sec" aria-label="Events">
+      <div class="sec-h"><h2>${wk.length?'On this weekend':'Coming up'}</h2><a href="#events">All events →</a></div>
+      <div class="evgrid">${evs.map(evCard).join('') || '<div class="empty">No events listed yet.</div>'}</div>
+    </section>
+    ${recs.length ? `<section class="sec"><div class="sec-h"><h2>Recommended for you</h2><a href="#saved">Based on your saved places</a></div><div class="evgrid">${recs.map(miniCard).join('')}</div></section>` : ''}
+    <section class="sec" aria-label="Map">
+      <div class="mapsec">
+        <div class="mapbox" id="homeMap"></div>
+        <div class="side">
+          <h2>Explore on the map</h2>
+          <p style="margin:0;color:var(--muted)">Every place and upcoming event, colour-coded by category. Tap a cluster to zoom in.</p>
+          <div class="legend" id="homeLegend">${Object.entries(CATS).map(([k,C])=>`<button type="button" aria-pressed="true" data-cat="${k}"><span class="dot" style="background:${C.color}"></span>${esc(C.name)}</button>`).join('')}</div>
+          <a class="btn solid" href="#explore" style="align-self:flex-start">Open full map</a>
+        </div>
+      </div>
+    </section>
+    <section class="sec" aria-label="Featured partners">
+      <div class="sec-h" style="margin-bottom:12px"><h2 style="font-size:20px;font-family:var(--body);letter-spacing:0">Featured <span class="badge-sp" style="vertical-align:middle;margin-left:6px">Sponsored · paid placement, not ranked</span></h2></div>
+      <div class="adgrid">${['[Sponsored restaurant — sample slot]','[Sponsored attraction — sample slot]','[Promoted event — sample slot]'].map(t=>`<div class="adslot"><span class="badge-sp">Sponsored</span><b>${t}</b><span class="sub-muted">Reserved space. Advertising is not built in this prototype.</span></div>`).join('')}</div>
+    </section>
+  </div>`;
+  bindSearchForms();
+  $$('[data-when]').forEach(a => a.addEventListener('click', e => { e.preventDefault(); LAST_SEARCH = {...blankF(), when:a.dataset.when, sort:'best'}; go('search'); }));
+  currentMap = MapView($('#homeMap'), {light:true});
+  const on = new Set(Object.keys(CATS));
+  const upd = () => currentMap.setItems(LIVE.filter(i=>on.has(i.c)));
+  upd();
+  $$('#homeLegend button').forEach(b => b.addEventListener('click', () => { const c=b.dataset.cat; on.has(c)?on.delete(c):on.add(c); b.setAttribute('aria-pressed',on.has(c)); upd(); }));
+}
+function smallTile(id){ const L=LISTS[id]; return `<a class="smalltile" href="#list-${id}"><div class="k" style="color:${L.color}">${esc(L.k)}</div><div><div class="t">${esc(L.name)}</div><div class="r">${esc(L.rule.split('.')[0])}.</div></div></a>`; }
+function evCard(e){ return `<a class="evcard" href="${href(e)}"><div class="datebox"><span>${e.start.toLocaleDateString('en-SG',{weekday:'short'})}</span><b>${e.start.getDate()}</b></div><div style="min-width:0"><h3>${esc(e.n)}</h3><div class="sub-muted" style="margin-top:4px">${esc(e.a)} · ${esc(e.time)}</div><div style="font-size:13px;font-weight:600;margin-top:6px">${e.p===0?'Free':e.p==null?'':'Ticketed · '+'$'.repeat(e.p)}</div></div></a>`; }
+function miniCard(it){ const C=CATS[it.c]; return `<a class="evcard" href="${href(it)}"><div class="datebox" style="background:${C.tint};color:${C.color}">${icon(it.c,24)}</div><div style="min-width:0"><h3>${esc(it.n)}</h3><div class="sub-muted" style="margin-top:4px">${esc(it.type)} · ${esc(it.a)}</div></div></a>`; }
+function recommended(){
+  if (!SAVED.size) return [];
+  const saved = [...SAVED].map(id=>ITEMBY[id]).filter(Boolean);
+  const cats = new Set(saved.map(s=>s.c)), attrs = new Set(saved.flatMap(s=>s.at));
+  return LIVE.filter(i=>!SAVED.has(i.id) && cats.has(i.c))
+    .map(i=>({i,sc:i.at.filter(a=>attrs.has(a)).length - dist(i)/10}))
+    .sort((a,b)=>b.sc-a.sc).slice(0,4).map(o=>o.i);
+}
+function examplesHtml(){
+  const ex = ['Japanese restaurants under $50 around Orchard Road','Dog-friendly cafes in the East','Free activities this weekend','Business lunch near Marina Bay','Highly rated local food','Family-friendly attractions indoor'];
+  return `<div class="examples"><span>Try:</span>${ex.map(q=>`<button type="button" data-ex="${esc(q)}">${esc(q)}</button>`).join('')}</div>`;
+}
+function searchForm(val, autofocus){
+  return `<form class="searchform" role="search" data-search>
+    <label class="searchbox"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+    <span class="sr">Search places, food and events</span><input type="search" name="q" value="${esc(val)}" placeholder="Try “dog-friendly cafes in the East”" autocomplete="off"${autofocus?' autofocus':''}></label>
+    <button type="submit" class="btn accent" style="min-height:56px;border-radius:16px">Search</button></form>`;
+}
+function bindSearchForms(){
+  $$('form[data-search]').forEach(f => f.addEventListener('submit', e => { e.preventDefault(); const q=f.elements.q.value.trim(); if (!q) return; LAST_SEARCH = parseQuery(q); if (location.hash==='#search') renderRoute(); else go('search'); }));
+  $$('[data-ex]').forEach(b => b.addEventListener('click', () => { LAST_SEARCH = parseQuery(b.dataset.ex); if (location.hash==='#search') renderRoute(); else go('search'); }));
+}
+
+/* ----- Explore / category / list / search ----- */
+function renderExplore(mode, arg){
+  let F, title, rule='', sub='';
+  if (mode==='cat'){ F = {...blankF(), cat:arg}; title = CATS[arg].name; sub = CATS[arg].sub; if (arg==='events') F.sort='date'; }
+  else if (mode==='list'){ F = {...blankF(), list:arg, sort:LISTS[arg].sort}; title = LISTS[arg].name; rule = LISTS[arg].rule; }
+  else if (mode==='search'){ F = LAST_SEARCH ? {...LAST_SEARCH, attrs:[...LAST_SEARCH.attrs], text:[...LAST_SEARCH.text]} : null; title = 'Search'; }
+  else { F = {...blankF()}; title = 'Explore Singapore'; sub = 'All places and upcoming events on one map.'; }
+  if (mode==='search' && !F){ renderSearchLanding(); return; }
+  const isSearch = mode==='search';
+  app.innerHTML = `<div class="container">
+    <section class="ex-head">
+      <h1>${esc(title)}</h1>
+      ${sub?`<div class="sub-muted">${esc(sub)}</div>`:''}
+      ${rule?`<div class="rulebox"><b>How this list is built:</b> ${esc(rule)} <a href="#how-we-rank">Ranking method</a></div>`:''}
+      ${isSearch ? searchForm(F.q||'') : ''}
+      <div class="filterbar" id="fbar"></div>
+      <div class="chips" id="chips" aria-live="polite"></div>
+    </section>
+    <div class="ex-body" id="exBody">
+      <section class="ex-list" id="exList" aria-label="Results"></section>
+      <div class="ex-map" id="exMap"></div>
+    </div>
+  </div>`;
+  bindSearchForms();
+  const listEl = $('#exList');
+  currentMap = MapView($('#exMap'), {onSelect: id => {
+    $$('.card.hl',listEl).forEach(c=>c.classList.remove('hl'));
+    if (!id) return; const c = listEl.querySelector(`[data-id="${id}"]`);
+    if (c){ c.classList.add('hl'); if (!isMobile()) c.scrollIntoView({block:'nearest',behavior:'smooth'}); }
+  }});
+  let sheet = 'half';
+  const fbar = $('#fbar');
+  function controls(){
+    const opt = (v,l,cur) => `<option value="${esc(v)}"${String(cur)===String(v)?' selected':''}>${esc(l)}</option>`;
+    let h = '';
+    if (mode!=='cat') h += `<label><span class="sr">Category</span><select data-f="cat">${opt('','All categories',F.cat||'')}${Object.entries(CATS).map(([k,C])=>opt(k,C.name,F.cat||'')).join('')}</select></label>`;
+    if (F.cat && SUBS[F.cat]) h += `<label><span class="sr">Type</span><select data-f="sub">${opt('','All types',F.sub||'')}${SUBS[F.cat].map(([k,l])=>opt(k,l,F.sub||'')).join('')}</select></label>`;
+    if (F.cat==='eat') h += `<label><span class="sr">Cuisine</span><select data-f="cuisine">${opt('','Any cuisine',F.cuisine||'')}${CUISINES.map(c=>opt(c,c==='cafe'?'Café food':c[0].toUpperCase()+c.slice(1),F.cuisine||'')).join('')}</select></label>`;
+    if (!F.cat || F.cat==='events') h += `<label><span class="sr">When</span><select data-f="when">${opt('','Any date',F.when||'')}${opt('today','Today',F.when||'')}${opt('weekend','This weekend',F.when||'')}${opt('next7','Next 7 days',F.when||'')}</select></label>`;
+    h += `<label><span class="sr">Region</span><select data-f="region">${opt('','All of Singapore',F.region||'')}${REGIONS.map(r=>opt(r,r,F.region||'')).join('')}</select></label>`;
+    h += `<label><span class="sr">Budget</span><select data-f="price">${opt('','Any budget',F.free?'free':(F.maxPrice??''))}${opt('free','Free only',F.free?'free':(F.maxPrice??''))}${[1,2,3].map(n=>opt(n,'Up to '+'$'.repeat(n),F.free?'free':(F.maxPrice??''))).join('')}</select></label>`;
+    ['indoor','outdoor','family','dog','access','business','date','late'].forEach(a => { h += `<button type="button" class="pill" data-attr="${a}" aria-pressed="${F.attrs.includes(a)}">${esc(ATTR[a])}</button>`; });
+    h += `<label><span class="sr">Sort</span><select data-f="sort">${opt('best','Sort: Best match',F.sort)}${opt('near','Sort: Nearest',F.sort)}${opt('rating','Sort: Google rating (sample)',F.sort)}${(F.cat==='events'||F.when)?opt('date','Sort: Date',F.sort):''}</select></label>`;
+    fbar.innerHTML = h;
+    $$('select',fbar).forEach(s => s.addEventListener('change', () => {
+      const k = s.dataset.f, v = s.value;
+      if (k==='price'){ F.free = v==='free'; F.maxPrice = (v===''||v==='free')?null:+v; F.maxPriceLabel=''; }
+      else if (k==='cat'){ F.cat = v||null; F.sub=null; F.cuisine=null; }
+      else F[k] = v||null;
+      if (k==='sort' && !v) F.sort='best';
+      update(true);
+    }));
+    $$('[data-attr]',fbar).forEach(b => b.addEventListener('click', () => { const a=b.dataset.attr; F.attrs = F.attrs.includes(a)?F.attrs.filter(x=>x!==a):[...F.attrs,a]; update(false); b.setAttribute('aria-pressed',F.attrs.includes(a)); }));
+  }
+  function chips(){
+    const c = [];
+    const add = (label, rm) => c.push({label, rm});
+    if (mode!=='cat' && F.cat) add(CATS[F.cat].name, ()=>{F.cat=null;F.sub=null;F.cuisine=null});
+    if (F.sub) add((SUBS[F.cat]||[]).find(s=>s[0]===F.sub)?.[1]||F.sub, ()=>F.sub=null);
+    if (F.cuisine) add(F.cuisine[0].toUpperCase()+F.cuisine.slice(1), ()=>F.cuisine=null);
+    if (F.area) add('Around '+F.area, ()=>F.area=null);
+    if (F.region) add(F.region, ()=>F.region=null);
+    if (F.free) add('Free', ()=>F.free=false);
+    if (F.maxPrice!=null) add((F.maxPriceLabel?F.maxPriceLabel+' → ':'')+'up to '+'$'.repeat(F.maxPrice), ()=>{F.maxPrice=null;F.maxPriceLabel=''});
+    if (F.when) add({today:'Today',weekend:'This weekend',next7:'Next 7 days'}[F.when], ()=>F.when=null);
+    F.attrs.forEach(a => add(ATTR[a], ()=>F.attrs=F.attrs.filter(x=>x!==a)));
+    if (F.minRating) add('Highly rated (4.5+, 200+ reviews)', ()=>{F.minRating=false; if(F.sort==='rating')F.sort='best'});
+    if (mode!=='list' && F.list) add(LISTS[F.list].name, ()=>F.list=null);
+    F.text.forEach(t => add(`Contains “${t}”`, ()=>F.text=F.text.filter(x=>x!==t)));
+    if (F.nearSort) add('Nearest to '+NEAR, ()=>{F.nearSort=false;F.sort='best'});
+    const lbl = isSearch ? 'We read your search as:' : (c.length?'Active filters:':'');
+    $('#chips').innerHTML = (c.length||isSearch) ? `<span class="lbl">${lbl}</span>` + (c.length ? c.map((x,i)=>`<span class="chip">${esc(x.label)}<button type="button" data-rm="${i}" aria-label="Remove ${esc(x.label)}">×</button></span>`).join('') + (c.length>1?`<button type="button" class="linkbtn" data-clear style="font-size:13px;margin-left:6px">Clear all</button>`:'') : '<span class="sub-muted">no filters — showing everything</span>') : '';
+    $$('[data-rm]').forEach(b => b.addEventListener('click', () => { c[+b.dataset.rm].rm(); update(true); }));
+    const cl = $('[data-clear]'); if (cl) cl.addEventListener('click', () => { const keepCat = mode==='cat'?F.cat:null, keepList = mode==='list'?F.list:null; Object.assign(F, blankF(), {cat:keepCat, list:keepList, q:F.q, sort:keepList?LISTS[keepList].sort:'best'}); update(true); });
+  }
+  function update(redoControls){
+    if (redoControls) controls();
+    chips();
+    const res = filterItems(F);
+    const showAds = mode==='cat' || mode==='explore';
+    const sortName = {best:'Best match',near:'Nearest to '+NEAR,rating:'Google rating (sample)',date:'Date'}[F.sort]||'Best match';
+    let html = `<button type="button" class="sheet-handle" aria-label="Expand or collapse results"><i></i><span>${res.length} results — tap to ${sheet==='full'?'show map':'expand'}</span></button>`;
+    html += `<div class="count"><span>${res.length} result${res.length===1?'':'s'} · sorted by ${esc(sortName)}</span>${F.sort==='rating'?'<span>Ratings are sample values</span>':''}</div>`;
+    if (!res.length) html += `<div class="empty"><b>No matches.</b><br>Try removing a filter above${F.text.length?', or the “contains” words':''}.</div>`;
+    const shown = res.slice(0, 60);
+    shown.forEach((it,i) => { if (showAds && (i===3||i===11)) html += sponsorCard(); html += cardHtml(it); });
+    if (res.length>60) html += `<div class="sub-muted" style="text-align:center;padding:8px">Showing the first 60. Narrow with filters to see more.</div>`;
+    listEl.innerHTML = html;
+    listEl.className = 'ex-list' + (sheet==='full'?' full':sheet==='peek'?' peek':'');
+    currentMap.setItems(res);
+    $('.sheet-handle',listEl).addEventListener('click', () => { sheet = sheet==='full'?'peek':sheet==='peek'?'half':'full'; listEl.className='ex-list'+(sheet==='full'?' full':sheet==='peek'?' peek':''); $('.sheet-handle span',listEl).textContent = `${res.length} results — tap to ${sheet==='full'?'show map':'expand'}`; });
+    if (isSearch) LAST_SEARCH = F;
+  }
+  listEl.addEventListener('mouseover', e => { const c=e.target.closest('.card[data-id]'); currentMap && currentMap.highlight(c?c.dataset.id:null); });
+  listEl.addEventListener('mouseleave', () => currentMap && currentMap.highlight(null));
+  controls(); update(false);
+  sizeExBody();
+}
+function isMobile(){ return window.matchMedia('(max-width: 860px)').matches; }
+function sizeExBody(){
+  const b = $('#exBody'); if (!b) return;
+  if (!isMobile()){ b.style.removeProperty('--exh'); return; }
+  const top = b.getBoundingClientRect().top + window.scrollY;
+  const h = Math.max(380, window.innerHeight - top - 68);
+  b.style.setProperty('--exh', h+'px');
+}
+window.addEventListener('resize', sizeExBody);
+
+function renderSearchLanding(){
+  app.innerHTML = `<div class="container"><section class="hero" style="padding-top:28px">
+    <h1 style="font-size:clamp(36px,5vw,56px)">Search Singapore</h1>
+    <p class="sub-muted" style="margin:0;max-width:640px">Type the way you’d ask a friend. We turn it into filters you can see and edit — nothing is made up.</p>
+    ${searchForm('', true)}
+    ${examplesHtml()}
+  </section>
+  <section class="cats" aria-label="Categories">${Object.entries(CATS).map(([k,C]) => `<a class="cattile" href="#${k}" style="background:${C.tint};min-height:110px"><span class="ic" style="background:${C.color}">${icon(k,22)}</span><span class="nm">${esc(C.name)}</span></a>`).join('')}</section></div>`;
+  bindSearchForms();
+}
+
+/* ----- Lists index ----- */
+function renderLists(){
+  app.innerHTML = `<div class="container"><section class="ex-head"><h1>Lists</h1><div class="sub-muted">No hidden editors and no paid placements. Each list is built by the rule shown on it.</div></section>
+  <div class="listgrid" style="grid-template-columns:repeat(auto-fill,minmax(260px,1fr));padding-bottom:40px">${Object.keys(LISTS).map(id => { const L=LISTS[id]; const n=filterItems({...blankF(),list:id}).length; return `<a class="smalltile" href="#list-${id}"><div class="k" style="color:${L.color}">${esc(L.k)}</div><div><div class="t">${esc(L.name)}</div><div class="r">${esc(L.rule)}</div><div class="r" style="font-weight:600;color:var(--ink)">${n} right now</div></div></a>`; }).join('')}</div></div>`;
+}
+
+/* ----- Detail pages ----- */
+function renderDetail(it){
+  if (!it || it.past){ app.innerHTML = `<div class="container prose"><h1>Not found</h1><p>This listing doesn’t exist or the event has ended. Past events are removed automatically.</p><a class="btn" href="#home">Back home</a></div>`; return; }
+  const C = CATS[it.c];
+  const nearby = LIVE.filter(i=>i.id!==it.id).map(i=>({i,d:distKm([it.lat,it.lng],[i.lat,i.lng])})).sort((a,b)=>a.d-b.d).slice(0,5);
+  const eventsHere = it.kind==='place' ? LIVE.filter(e=>e.kind==='event'&&e.venue===it.id) : [];
+  const venue = it.kind==='event' ? BYID[it.venue] : null;
+  app.innerHTML = `<div class="container">
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="#${it.c}">${esc(C.name)}</a> › <a href="#explore">${esc(it.a)}</a></nav>
+    <div class="detail">
+      <div>
+        <div class="photo" style="background:${C.tint};color:${C.color}">${icon(it.c,40)}<span>No licensed photo yet — we only use official or licensed images</span></div>
+        <h1>${esc(it.n)}</h1>
+        <div class="meta" style="margin-top:8px;font-size:15px">${metaHtml(it)}</div>
+        ${it.sample?`<p class="tag warn" style="display:inline-block;margin-top:10px">${it.kind==='event'?'Sample event — not real':'Sample listing — not a real business'}</p>`:''}
+        <div class="linkrow" style="margin-top:16px">${saveBtnBig(it.id)}<a class="btn" href="${gmaps(it)}" target="_blank" rel="noopener">Directions (Google Maps)</a>${it.url?`<a class="btn" href="${esc(it.url)}" target="_blank" rel="noopener">Official site</a>`:''}${it.kind==='event'?(it.url?`<a class="btn" href="${esc(it.url)}" target="_blank" rel="noopener">Tickets / info</a>`:''):''}</div>
+        <div class="stack" style="margin-top:22px">
+          ${it.kind==='place'?(it.r==null?`<div class="panel"><h2>Rating</h2><p style="margin:0">${esc(priceLabel(it))}</p><p class="sub-muted" style="margin:8px 0 0">Google rating will load live here once Google is connected. It is never stored.</p></div>`:`<div class="panel"><h2>Rating</h2><div class="ratingbig"><b>★ ${it.r.toFixed(1)}</b><span>${it.rc.toLocaleString()} reviews · ${esc(priceLabel(it))}</span></div><p class="sub-muted" style="margin:8px 0 0">Google rating — <b>sample value</b>. In production this loads live from Google when you open the page and is never stored.</p></div>`)
+            :`<div class="panel"><h2>When &amp; where</h2><p style="margin:0">${fmtD(it.start)}${it.end>it.start?' – '+fmtD(it.end):''} · ${esc(it.time)}</p><p style="margin:6px 0 0">Venue: ${venue?`<a href="${href(venue)}">${esc(venue.n)}</a>`:esc(it.venueName||it.a)} · ${it.p===0?'Free':it.p==null?'Price not listed':'Ticketed · '+'$'.repeat(it.p)}</p><p class="sub-muted" style="margin:8px 0 0">This event disappears from the site automatically after ${fmtD(it.end)}.</p></div>`}
+          <div class="panel"><h2>About</h2>${it.d?`<p style="margin:0">${esc(it.d)}</p><p class="ai" style="margin:8px 0 0">AI-written or official text — check before relying on it.</p>`:`<p class="sub-muted" style="margin:0">No description yet. ${esc(it.type)} in ${esc(it.a)}.</p>`}${it.rec?`<p style="margin:10px 0 0"><span class="tag rec">${esc(it.rec)}</span></p>`:''}${it.closure?`<p style="margin:10px 0 0"><span class="tag warn">${esc(it.closure)}</span></p>`:''}</div>
+          <div class="panel"><h2>Attributes &amp; where they come from</h2>${attrTable(it)}</div>
+          <div class="panel"><h2>Sources &amp; freshness</h2><p style="margin:0;font-size:14px">Sources: ${esc((it.sources||[]).join(', '))}. Last checked: ${fmtD(it.checked)}${DATA_MODE==='seed'?' (sample)':''}.</p><p style="margin:10px 0 0"><button type="button" class="btn small" data-report="${it.id}">Report an error</button></p></div>
+        </div>
+      </div>
+      <aside class="stack">
+        <div class="minimap" id="miniMap"></div>
+        ${eventsHere.length?`<div class="panel"><h2>Upcoming here</h2>${eventsHere.map(e=>`<a class="mini" href="${href(e)}"><span class="sq" style="background:${CATS.events.tint};color:${CATS.events.color}">${icon('events',20)}</span><span><b style="font-size:14px">${esc(e.n)}</b><br><span class="sub-muted">${fmtD(e.start)} · ${esc(e.time)}</span></span></a>`).join('')}</div>`:''}
+        <div class="panel"><h2>Nearby</h2>${nearby.map(({i,d})=>{const c=CATS[i.c];return `<a class="mini" href="${href(i)}"><span class="sq" style="background:${c.tint};color:${c.color}">${icon(i.c,20)}</span><span><b style="font-size:14px">${esc(i.n)}</b><br><span class="sub-muted">${esc(i.type)} · ${d.toFixed(1)} km</span></span></a>`}).join('')}</div>
+      </aside>
+    </div></div>`;
+  currentMini = MapView($('#miniMap'), {light:true});
+  currentMini.setItems([it, ...nearby.map(n=>n.i)]);
+  currentMini.select(it.id, true);
+}
+const saveBtnBig = id => `<button type="button" class="btn" data-save="${id}" aria-pressed="${SAVED.has(id)}">${bookmarkSvg(SAVED.has(id))}</button>`;
+
+/* ----- Saved ----- */
+function renderSaved(){
+  const items = [...SAVED].map(id=>ITEMBY[id]).filter(i=>i && !i.past);
+  app.innerHTML = `<div class="container"><section class="ex-head"><h1>Saved</h1><div class="sub-muted">Saved on this device only. Accounts (with dark mode and syncing across devices) come in a later version.</div>
+    ${items.length?`<div class="linkrow"><button type="button" class="btn small" id="copyList">Copy list as text</button></div>`:''}</section>
+    <div class="ex-list" style="position:static;height:auto;box-shadow:none;padding:0 0 40px;background:transparent">${items.length?items.map(cardHtml).join(''):'<div class="empty">Nothing saved yet. Tap the bookmark on any place or event.</div>'}</div></div>`;
+  const cb = $('#copyList');
+  if (cb) cb.addEventListener('click', async () => {
+    const txt = items.map(i=>`${i.n} — ${i.type}, ${i.a}${i.kind==='event'?' ('+fmtD(i.start)+')':''}`).join('\n');
+    try { await navigator.clipboard.writeText(txt); toast('List copied'); } catch(e){ toast('Copy not allowed here'); }
+  });
+}
+
+/* ----- Static pages ----- */
+function renderRank(){
+  app.innerHTML = `<div class="container prose"><h1>How we rank</h1>
+  <p>Every list has its own published rule. We never blend everything into one hidden score, and paid placements never enter any ranking.</p>
+  <div class="tblwrap"><table><thead><tr><th>List</th><th>Rule</th><th>Data used</th></tr></thead><tbody>
+  <tr><td>Best match (default)</td><td>How well it matches your filters, then distance from your chosen area, then how complete and recently checked our data is.</td><td>Our stored data only. <b>Google ratings are not used.</b></td></tr>
+  <tr><td>Sort: Google rating</td><td>You choose it. Sorted by rating at that moment.</td><td>Google, live, not stored (sample values in this prototype)</td></tr>
+  ${Object.values(LISTS).map(L=>`<tr><td>${esc(L.name)}</td><td>${esc(L.rule)}</td><td>${esc(L.k)}</td></tr>`).join('')}
+  <tr><td>Recommended for you</td><td>Similar categories and attributes to what you’ve saved on this device.</td><td>Your device only</td></tr>
+  <tr><td>Trending / Local favourites</td><td>Not offered yet — there’s no legitimate data for it until the site has users.</td><td>—</td></tr>
+  </tbody></table></div>
+  <h2>Sponsored placements</h2><p>Always labelled <b>Sponsored</b>, visually different, and limited to fixed slots on browse pages. Never inside Lists, rated lists or search results.</p>
+  <h2>Natural-language search</h2><p>Your words are turned into ordinary filters, shown as chips you can remove. In this prototype it’s a keyword parser; later an AI model may do the translation, but results will still only come from our listings.</p></div>`;
+}
+function renderSources(){
+  if (DATA_MODE==='live'){ const c=DATA_META.counts; app.innerHTML = `<div class="container prose"><h1>Data sources</h1>
+  <p>Last updated <b>${fmtD(new Date(DATA_META.built))}</b>. The site rebuilds itself every week.</p>
+  <div class="tblwrap"><table><thead><tr><th>Source</th><th>What it gives</th><th>Count</th></tr></thead><tbody>
+  <tr><td>OpenStreetMap</td><td>Restaurants, cafés, bars, malls, markets, museums, attractions, parks, beaches</td><td>${c.osm}</td></tr>
+  <tr><td>NEA via data.gov.sg</td><td>Government hawker centres</td><td>${c.hawkers}</td></tr>
+  <tr><td>NEA via data.gov.sg</td><td>Hawker cleaning closures</td><td>${c.closures}</td></tr>
+  <tr><td>Our own list</td><td>Hand-added places and corrections (these win over other sources)</td><td>${c.manual}</td></tr>
+  <tr><td>Events</td><td>Added by hand; past events are removed automatically</td><td>${c.events}</td></tr>
+  </tbody></table></div>
+  <h2>Not connected yet</h2><p>Google ratings, review counts and opening hours. When connected they load live on each visit and are never stored, as Google’s terms require.</p>
+  <h2>Attribution</h2><p>Map data © OpenStreetMap contributors, Open Database Licence (ODbL). Hawker data from NEA, data.gov.sg, Singapore Open Data Licence. Fonts: Bricolage Grotesque and Inter via Google Fonts.</p></div>`; return; }
+  app.innerHTML = `<div class="container prose"><h1>Data sources &amp; what’s real</h1>
+  <h2>In this prototype</h2>
+  <div class="tblwrap"><table><thead><tr><th>Data</th><th>Status</th></tr></thead><tbody>
+  <tr><td>Place names, types, areas</td><td>Real places; locations approximate and hand-placed. Four listings named “Sample listing” are fictional, to demonstrate filters.</td></tr>
+  <tr><td>Descriptions</td><td>AI-written from general public facts. Labelled on each page.</td></tr>
+  <tr><td>Google ratings &amp; review counts</td><td><b>Sample values.</b> Live from Google in production, never stored.</td></tr>
+  <tr><td>Events</td><td><b>All fictional samples</b>, dated relative to today. One past event is included to show automatic expiry — you shouldn’t see it.</td></tr>
+  <tr><td>Hawker cleaning closures</td><td><b>Sample dates.</b> NEA’s official schedule (data.gov.sg, Open Data Licence) in production.</td></tr>
+  <tr><td>Attributes (dog-friendly, family, etc.)</td><td>Mostly <b>sample</b>; each shows its source and confidence. Indoor/outdoor is inferred from place type.</td></tr>
+  <tr><td>Official designations</td><td>National monuments and UNESCO listing as generally documented; to be checked against official registers.</td></tr>
+  <tr><td>Map</td><td>Simplified coastline drawn in the page. Google Maps in production.</td></tr>
+  </tbody></table></div>
+  <h2>Attribution</h2>
+  <p>Coastline: © OpenStreetMap contributors, Open Database Licence (ODbL), via the geo-maps project (MIT-licensed code). Fonts: Bricolage Grotesque and Inter via Google Fonts.</p>
+  <p>Planned production sources: Google Places (live, not stored), OpenStreetMap, data.gov.sg (NEA, NParks), OneMap, official venue and agency websites.</p></div>`;
+}
+function renderTerms(){
+  app.innerHTML = `<div class="container prose"><h1>Terms &amp; Privacy (placeholder)</h1><p>This is a prototype. Saved places and your chosen area are kept only in this browser’s local storage and never sent anywhere.</p><p>In production these pages will include the terms Google requires for apps that show Google Maps content.</p></div>`;
+}
+
+/* ----- Report modal ----- */
+function openReport(id){
+  const it = id ? ITEMBY[id] : null;
+  $('#modalRoot').innerHTML = `<div class="modal-bg" data-close><div class="modal" role="dialog" aria-modal="true" aria-labelledby="rpT">
+    <h2 id="rpT">Report an error${it?': '+esc(it.n):''}</h2>
+    <form id="rpF" style="display:flex;flex-direction:column;gap:12px">
+      <label>What’s wrong?<select name="w"><option>Closed permanently</option><option>Wrong location</option><option>Wrong attribute (e.g. not dog-friendly)</option><option>Wrong price or details</option><option>Something else</option></select></label>
+      <label>Details (optional)<textarea name="d" rows="3"></textarea></label>
+      <div class="linkrow"><button class="btn accent" type="submit">Send report</button><button class="btn" type="button" data-close>Cancel</button></div>
+    </form></div></div>`;
+  const root = $('#modalRoot');
+  $('select',root).focus();
+  root.querySelectorAll('[data-close]').forEach(el => el.addEventListener('click', e => { if (e.target===el) root.innerHTML=''; }));
+  $('#rpF').addEventListener('submit', e => { e.preventDefault(); $('.modal',root).innerHTML = `<h2>Thanks</h2><p style="margin:0">In this prototype, reports aren’t sent anywhere. In production they go to a review queue and the listing’s “last checked” date updates once verified.</p><button class="btn solid" type="button" id="rpOk" style="align-self:flex-start">Close</button>`; $('#rpOk').onclick=()=>root.innerHTML=''; $('#rpOk').focus(); });
+  document.addEventListener('keydown', function k(e){ if (e.key==='Escape'){ root.innerHTML=''; document.removeEventListener('keydown',k);} });
+}
+
+/* ============ ROUTER ============ */
+function go(name){ if (location.hash==='#'+name) renderRoute(); else location.hash = name; }
+function renderRoute(){
+  cleanup();
+  const h = (location.hash||'#home').slice(1) || 'home';
+  let tab = '';
+  if (h==='home'){ renderHome(); tab='home'; }
+  else if (CATS[h]){ renderExplore('cat',h); tab='explore'; }
+  else if (h==='explore'){ renderExplore('explore'); tab='explore'; }
+  else if (h==='search'){ renderExplore('search'); tab='search'; }
+  else if (h==='lists'){ renderLists(); tab='home'; }
+  else if (h.startsWith('list-') && LISTS[h.slice(5)]){ renderExplore('list',h.slice(5)); tab='explore'; }
+  else if (h.startsWith('place-')){ renderDetail(BYID[h.slice(6)]); }
+  else if (h.startsWith('event-')){ renderDetail(EVENTS.find(e=>e.id===h.slice(6))); }
+  else if (h==='saved'){ renderSaved(); tab='saved'; }
+  else if (h==='how-we-rank') renderRank();
+  else if (h==='sources') renderSources();
+  else if (h==='terms') renderTerms();
+  else renderHome();
+  $$('.mainnav a').forEach(a => { if (a.getAttribute('href')==='#'+h) a.setAttribute('aria-current','page'); else a.removeAttribute('aria-current'); });
+  $$('.tabbar a').forEach(a => { if (a.dataset.tab===tab) a.setAttribute('aria-current','page'); else a.removeAttribute('aria-current'); });
+  window.scrollTo(0,0);
+  const h1 = $('#app h1'); if (h1){ h1.setAttribute('tabindex','-1'); }
+}
+window.addEventListener('hashchange', renderRoute);
+
+/* global delegated handlers */
+document.addEventListener('click', e => {
+  const sv = e.target.closest('[data-save]'); if (sv){ e.preventDefault(); saveToggle(sv.dataset.save); return; }
+  const mo = e.target.closest('[data-more]'); if (mo){ const d = mo.nextElementSibling; const open = d.hidden; d.hidden = !open; mo.setAttribute('aria-expanded', open); mo.textContent = open?'Hide details':'Details'; return; }
+  const rp = e.target.closest('[data-report]'); if (rp){ openReport(rp.dataset.report); return; }
+});
+const nearSel = $('#nearSel');
+nearSel.innerHTML = REGIONS.map(r => `<optgroup label="${r}">${Object.entries(AREAS).filter(([,v])=>v[2]===r).map(([k])=>`<option${k===NEAR?' selected':''}>${esc(k)}</option>`).join('')}</optgroup>`).join('');
+nearSel.addEventListener('change', () => { NEAR = nearSel.value; store.set('wander_near',NEAR); renderRoute(); toast('Distances now from '+NEAR); });
+updateSavedCount();
+loadData().then(renderRoute);
+</script>
+</body>
+</html>

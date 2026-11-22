@@ -1,0 +1,96 @@
+Name,Category,Type,Area,Price,Status,Attributes,Cuisine,Official designation,Website,Description (AI-written),Latitude,Longitude,ID
+Tiong Bahru Market,Eat,Hawker centre,Tiong Bahru,'$,Real place (location approx.),family groups,local,,https://www.nea.gov.sg,"Two-storey market with a cooked-food centre upstairs, in the heart of the 1930s Tiong Bahru estate.",1.2852,103.8326,tiong-bahru-market
+Maxwell Food Centre,Eat,Hawker centre,Chinatown,'$,Real place (location approx.),groups,"local, chinese",,,"Compact Chinatown hawker centre, well known for its Hainanese chicken rice stalls.",1.2803,103.8447,maxwell
+Lau Pa Sat,Eat,Hawker centre,Marina Bay,'$,Real place (location approx.),late groups,local,National monument,,Victorian cast-iron market hall in the CBD; the next street becomes a satay strip in the evenings.,1.2806,103.8504,lau-pa-sat
+Chinatown Complex Food Centre,Eat,Hawker centre,Chinatown,'$,Real place (location approx.),groups,"local, chinese",,,"One of Singapore’s largest hawker centres, above a wet market in Chinatown.",1.2823,103.843,chinatown-complex
+Old Airport Road Food Centre,Eat,Hawker centre,Kallang & Dakota,'$,Real place (location approx.),groups,local,,,"Large, long-running hawker centre in Dakota with many well-known stalls.",1.308,103.8856,old-airport-road
+Newton Food Centre,Eat,Hawker centre,Novena & Balestier,'$$,Real place (location approx.),late outdoor groups,"local, seafood",,,"Open-air hawker centre at Newton Circus, popular for seafood and satay in the evening.",1.3121,103.8395,newton
+Amoy Street Food Centre,Eat,Hawker centre,Chinatown,'$,Real place (location approx.),,local,,,"CBD hawker centre in Tanjong Pagar, busiest at weekday lunch.",1.2794,103.8466,amoy-street
+Hong Lim Market & Food Centre,Eat,Hawker centre,Chinatown,'$,Real place (location approx.),,"local, chinese",,,"Hawker centre in a Chinatown housing block, known for its noodle stalls.",1.2852,103.8457,hong-lim
+East Coast Lagoon Food Village,Eat,Hawker centre,East Coast,'$,Real place (location approx.),outdoor family late groups,"local, seafood",,,Beachside hawker centre in East Coast Park; a classic stop after a cycle or BBQ.,1.3067,103.9343,east-coast-lagoon
+Bedok 85 Fengshan Market & Food Centre,Eat,Hawker centre,Bedok,'$,Real place (location approx.),late,local,,,"Neighbourhood hawker centre in Bedok, popular for late-night suppers.",1.332,103.9387,bedok-85
+Chomp Chomp Food Centre,Eat,Hawker centre,Serangoon,'$,Real place (location approx.),late outdoor,local,,,Evening-focused hawker centre in Serangoon Gardens.,1.3644,103.8665,chomp-chomp
+Adam Road Food Centre,Eat,Hawker centre,Bukit Timah,'$,Real place (location approx.),,"local, malay",,,"Small hawker centre on Adam Road, known for nasi lemak and Malay food.",1.324,103.814,adam-road
+Golden Mile Food Centre,Eat,Hawker centre,Bugis & Kampong Glam,'$,Real place (location approx.),,local,,,Beach Road hawker centre with a wide range of local dishes.,1.303,103.864,golden-mile-fc
+Tekka Centre,Eat,Hawker centre,Little India,'$,Real place (location approx.),veg groups,"local, indian",,,"Little India market and food centre, strong on Indian and Indian-Muslim dishes.",1.3064,103.8507,tekka
+ABC Brickworks Market & Food Centre,Eat,Hawker centre,Pasir Panjang & Queenstown,'$,Real place (location approx.),,local,,,Neighbourhood hawker centre in Bukit Merah.,1.2869,103.8085,abc-brickworks
+Ghim Moh Market & Food Centre,Eat,Hawker centre,Holland & Dempsey,'$,Real place (location approx.),,local,,,Neighbourhood hawker centre near Holland Village.,1.3109,103.7881,ghim-moh
+Whampoa Makan Place,Eat,Hawker centre,Novena & Balestier,'$,Real place (location approx.),,local,,,"Pair of neighbourhood food centres in Whampoa, off Balestier Road.",1.3227,103.855,whampoa
+Yishun Park Hawker Centre,Eat,Hawker centre,Yishun,'$,Real place (location approx.),family access,local,,,Modern hawker centre beside Yishun Park.,1.4268,103.837,yishun-park-hc
+Jurong West 505 Market & Food Centre,Eat,Hawker centre,Jurong,'$,Real place (location approx.),,local,,,Neighbourhood hawker centre in Jurong West.,1.35,103.718,jurong-west-505
+Kovan 209 Market & Food Centre,Eat,Hawker centre,Hougang & Kovan,'$,Real place (location approx.),,local,,,Neighbourhood hawker centre in Kovan.,1.359,103.887,kovan-209
+Changi Village Hawker Centre,Eat,Hawker centre,Changi,'$,Real place (location approx.),outdoor family,"local, malay",,,"Hawker centre near Changi Point Ferry Terminal, known for nasi lemak.",1.3891,103.9877,changi-village-hc
+Haig Road Market & Food Centre,Eat,Hawker centre,Katong & Joo Chiat,'$,Real place (location approx.),,"local, malay",,,Neighbourhood hawker centre near Geylang Serai.,1.3138,103.8985,haig-road
+Bukit Timah Market & Food Centre,Eat,Hawker centre,Bukit Timah,'$,Real place (location approx.),,local,,,"Hawker centre near Beauty World, at the foot of Bukit Timah.",1.3405,103.776,beauty-world-fc
+Marine Parade Central Market & Food Centre,Eat,Hawker centre,East Coast,'$,Real place (location approx.),,local,,,Neighbourhood hawker centre in Marine Parade.,1.3025,103.907,marine-parade-fc
+Zion Riverside Food Centre,Eat,Hawker centre,River Valley,'$,Real place (location approx.),,local,,,Riverside hawker centre in River Valley.,1.2925,103.831,zion-riverside
+Pasir Panjang Food Centre,Eat,Hawker centre,Pasir Panjang & Queenstown,'$,Real place (location approx.),late,"local, seafood",,,Seafood-leaning hawker centre on Pasir Panjang Road.,1.2763,103.7914,pasir-panjang-fc
+Satay by the Bay,Eat,Food centre,Marina Bay,'$$,Real place (location approx.),outdoor family late,local,,,Food centre at Gardens by the Bay with bay views and satay stalls.,1.2826,103.8695,satay-by-the-bay
+Common Man Coffee Roasters,Eat,Café,River Valley,'$$,Real place (location approx.),business groups,"cafe, western",,,Specialty coffee roaster and all-day café on Martin Road.,1.2915,103.8395,common-man
+Tiong Bahru Bakery,Eat,Bakery café,Tiong Bahru,'$$,Real place (location approx.),,cafe,,,French-style bakery café in the Tiong Bahru estate.,1.284,103.8315,tiong-bahru-bakery
+Chye Seng Huat Hardware,Eat,Café,Little India,'$$,Real place (location approx.),,cafe,,,Café and coffee roastery in a converted hardware shop in Jalan Besar.,1.3125,103.858,chye-seng-huat
+PS.Cafe Harding Road,Eat,Restaurant,Holland & Dempsey,'$$$,Real place (location approx.),date groups dog,western,,,All-day restaurant surrounded by greenery at Dempsey.,1.305,103.811,ps-cafe-dempsey
+JUMBO Seafood (East Coast),Eat,Seafood restaurant,East Coast,'$$$,Real place (location approx.),groups business family,"seafood, chinese",,,"Seafood restaurant at the East Coast Seafood Centre, known for chilli crab.",1.3046,103.93,jumbo-ecsc
+Song Fa Bak Kut Teh (New Bridge Road),Eat,Restaurant,Chinatown,'$$,Real place (location approx.),family,"chinese, local",,,Bak kut teh (peppery pork rib soup) specialist near Clarke Quay.,1.2891,103.847,song-fa
+328 Katong Laksa,Eat,Local eatery,Katong & Joo Chiat,'$,Real place (location approx.),,local,,,Laksa shop on East Coast Road.,1.306,103.905,328-katong-laksa
+Komala Vilas,Eat,Restaurant,Little India,'$,Real place (location approx.),veg family,indian,,,Long-running South Indian vegetarian restaurant on Serangoon Road.,1.3063,103.8525,komala-vilas
+Zam Zam,Eat,Restaurant,Bugis & Kampong Glam,'$,Real place (location approx.),late,"indian, local",,,Murtabak and biryani restaurant opposite Sultan Mosque.,1.3025,103.8589,zam-zam
+Candlenut,Eat,Restaurant,Holland & Dempsey,'$$$$,Real place (location approx.),business date,peranakan,,,Fine-dining Peranakan restaurant at Dempsey.,1.304,103.81,candlenut
+Ya Kun Kaya Toast (Far East Square),Eat,Kopitiam,Chinatown,'$,Real place (location approx.),business,"local, cafe",,,Original outlet of the kaya toast and kopi chain.,1.284,103.8483,ya-kun-china-st
+Atlas,Eat,Bar,Bugis & Kampong Glam,'$$$$,Real place (location approx.),late date business,western,,,"Art-deco bar in Parkview Square, known for its large gin collection.",1.3011,103.8587,atlas-bar
+Sample listing — Japanese restaurant,Eat,Restaurant (sample),Orchard,'$$,Fictional sample,business date,japanese,,,"Placeholder listing to demonstrate cuisine, price and area filters. Not a real business.",1.303,103.834,sample-japanese-orchard
+Sample listing — ramen bar,Eat,Restaurant (sample),Orchard,'$,Fictional sample,late,japanese,,,Placeholder listing. Not a real business.,1.3015,103.8375,sample-ramen-orchard
+Sample listing — business lunch restaurant,Eat,Restaurant (sample),Marina Bay,'$$$,Fictional sample,business indoor,western,,,Placeholder listing to demonstrate the business filter. Not a real business.,1.282,103.854,sample-business-mb
+Sample listing — dog-friendly café,Eat,Café (sample),Katong & Joo Chiat,'$$,Fictional sample,dog outdoor,cafe,,,Placeholder listing to demonstrate the dog-friendly filter. Not a real business.,1.308,103.901,sample-dog-cafe-east
+National Gallery Singapore,See,Art museum,Civic District,'$$,Real place (location approx.),indoor family access,,Housed in two national monuments,https://www.nationalgallery.sg,"Largest public collection of Singapore and Southeast Asian modern art, in the former City Hall and Supreme Court.",1.2903,103.8515,national-gallery
+Gardens by the Bay,See,Gardens,Marina Bay,Free,Real place (location approx.),outdoor family access date,,,https://www.gardensbythebay.com.sg,Waterfront gardens with the Supertree Grove (free outdoor areas; the conservatories are ticketed).,1.2816,103.8636,gardens-by-the-bay
+Marina Bay Sands SkyPark Observation Deck,See,Observation deck,Marina Bay,'$$$,Real place (location approx.),date family,,,,Observation deck on top of Marina Bay Sands.,1.2834,103.8607,mbs-skypark
+Merlion Park,See,Landmark,Marina Bay,Free,Real place (location approx.),outdoor family date,,,,"Home of the Merlion statue, facing Marina Bay.",1.2868,103.8545,merlion-park
+National Museum of Singapore,See,History museum,Civic District,'$$,Real place (location approx.),indoor family access,,National monument,,"Singapore’s oldest museum, focused on the country’s history.",1.2966,103.8485,national-museum
+Asian Civilisations Museum,See,Museum,Civic District,'$$,Real place (location approx.),indoor family,,Empress Place Building — national monument,,Museum of pan-Asian cultures on the Singapore River.,1.2875,103.8514,acm
+ArtScience Museum,See,Museum,Marina Bay,'$$$,Real place (location approx.),indoor family,,,,"Lotus-shaped museum for art, science and technology exhibitions.",1.2863,103.8593,artscience
+Peranakan Museum,See,Museum,Civic District,'$$,Real place (location approx.),indoor,,,,Museum of Peranakan culture on Armenian Street.,1.2944,103.849,peranakan-museum
+Sri Mariamman Temple,See,Hindu temple,Chinatown,Free,Real place (location approx.),,,National monument,,"Singapore’s oldest Hindu temple, on South Bridge Road.",1.2826,103.8453,sri-mariamman
+Buddha Tooth Relic Temple,See,Buddhist temple,Chinatown,Free,Real place (location approx.),indoor,,,,Tang-style Buddhist temple and museum in Chinatown.,1.2814,103.8443,buddha-tooth
+Sultan Mosque,See,Mosque,Bugis & Kampong Glam,Free,Real place (location approx.),,,National monument,,Golden-domed mosque at the heart of Kampong Glam.,1.3022,103.8589,sultan-mosque
+Thian Hock Keng Temple,See,Chinese temple,Chinatown,Free,Real place (location approx.),,,National monument,,"One of Singapore’s oldest Hokkien temples, on Telok Ayer Street.",1.2808,103.8476,thian-hock-keng
+Singapore Zoo,See,Zoo,Mandai,'$$$$,Real place (location approx.),outdoor family access,,,https://www.mandai.com,Open-concept zoo in the Mandai wildlife precinct.,1.4043,103.793,singapore-zoo
+Night Safari,See,Wildlife park,Mandai,'$$$$,Real place (location approx.),outdoor family late,,,https://www.mandai.com,Nocturnal wildlife park next to the zoo.,1.4022,103.788,night-safari
+Bird Paradise,See,Bird park,Mandai,'$$$$,Real place (location approx.),outdoor family,,,https://www.mandai.com,Bird park in the Mandai wildlife precinct.,1.406,103.7865,bird-paradise
+Haw Par Villa,See,Theme park,Pasir Panjang & Queenstown,Free,Real place (location approx.),outdoor family,,,,Free-entry park of statues and dioramas from Chinese folklore.,1.283,103.782,haw-par-villa
+Singapore Flyer,See,Observation wheel,Marina Bay,'$$$,Real place (location approx.),date family,,,,Giant observation wheel overlooking Marina Bay.,1.2893,103.8631,singapore-flyer
+Esplanade – Theatres on the Bay,See,Performing arts centre,Civic District,Free,Real place (location approx.),indoor family access,,,https://www.esplanade.com,Performing arts centre on Marina Bay with frequent free performances.,1.2898,103.8555,esplanade
+Universal Studios Singapore,See,Theme park,Sentosa,'$$$$,Real place (location approx.),outdoor family,,,,Movie theme park at Resorts World Sentosa.,1.254,103.8238,uss
+Singapore Botanic Gardens,See,Gardens,Holland & Dempsey,Free,Real place (location approx.),outdoor family dog access,,UNESCO World Heritage Site,https://www.nparks.gov.sg,160-year-old tropical garden with the National Orchid Garden (ticketed) inside.,1.3138,103.8159,botanic-gardens
+ION Orchard,Shop,Mall,Orchard,'$$$,Real place (location approx.),indoor access,,,https://www.ionorchard.com,Large mall above Orchard MRT with luxury and high-street brands.,1.304,103.8318,ion-orchard
+Ngee Ann City,Shop,Mall,Orchard,'$$$,Real place (location approx.),indoor access,,,,Orchard Road mall anchored by a department store and a large bookshop.,1.3025,103.8345,ngee-ann-city
+TANGS Orchard,Shop,Department store,Orchard,'$$$,Real place (location approx.),indoor,,,,Long-running Singaporean department store at the Orchard–Scotts junction.,1.3049,103.8331,tangs
+Jewel Changi Airport,Shop,Mall,Changi,'$$,Real place (location approx.),indoor family access,,,https://www.jewelchangiairport.com,"Nature-themed mall at Changi Airport, around the Rain Vortex indoor waterfall.",1.3602,103.9897,jewel
+VivoCity,Shop,Mall,HarbourFront,'$$,Real place (location approx.),indoor family access,,,,"Waterfront mall at HarbourFront, the gateway to Sentosa.",1.2643,103.8222,vivocity
+Haji Lane,Shop,Shopping street,Bugis & Kampong Glam,'$$,Real place (location approx.),outdoor date,,,,"Narrow lane of independent boutiques, cafés and street art in Kampong Glam.",1.3006,103.8587,haji-lane
+Mustafa Centre,Shop,Department store,Little India,'$,Real place (location approx.),indoor late,,,,Sprawling department store in Little India selling almost everything.,1.3099,103.8556,mustafa
+Bugis Street,Shop,Street market,Bugis & Kampong Glam,'$,Real place (location approx.),indoor,,,,Covered street market with budget fashion and souvenirs.,1.3007,103.8549,bugis-street
+Funan,Shop,Mall,Civic District,'$$,Real place (location approx.),indoor family access,,,,Lifestyle and tech mall with an indoor climbing wall.,1.2913,103.8497,funan
+Chinatown Street Market,Shop,Street market,Chinatown,'$,Real place (location approx.),outdoor family,,,,"Souvenir stalls along Pagoda, Trengganu and Sago Streets.",1.2837,103.8443,chinatown-street-market
+Tampines Mall,Shop,Mall,Tampines,'$$,Real place (location approx.),indoor family access,,,,Regional mall at Tampines MRT.,1.3525,103.9446,tampines-mall
+Jurong Point,Shop,Mall,Jurong,'$$,Real place (location approx.),indoor family access,,,,Large suburban mall at Boon Lay.,1.3397,103.7066,jurong-point
+Northpoint City,Shop,Mall,Yishun,'$$,Real place (location approx.),indoor family access,,,,Regional mall in Yishun.,1.4294,103.8355,northpoint-city
+nex,Shop,Mall,Serangoon,'$$,Real place (location approx.),indoor family access,,,,Regional mall above Serangoon MRT with a rooftop play area.,1.3507,103.8723,nex
+Dempsey Hill,Shop,Lifestyle enclave,Holland & Dempsey,'$$$,Real place (location approx.),date outdoor,,,,"Former army barracks turned into restaurants, bars and shops.",1.3046,103.8095,dempsey-hill
+MacRitchie Reservoir Park,Do & Outdoors,Nature trails,Thomson,Free,Real place (location approx.),outdoor,,,,"Forest trails around the reservoir, including the TreeTop Walk suspension bridge.",1.342,103.833,macritchie
+Southern Ridges (Henderson Waves),Do & Outdoors,Trail,HarbourFront,Free,Real place (location approx.),outdoor dog,,,,"About 10 km of linked parks and bridges from Mount Faber to Kent Ridge, including Henderson Waves.",1.2757,103.8155,southern-ridges
+Bukit Timah Nature Reserve,Do & Outdoors,Nature reserve,Bukit Timah,Free,Real place (location approx.),outdoor,,,,"Primary rainforest and Bukit Timah Hill, Singapore’s highest natural point.",1.354,103.776,bukit-timah-nr
+East Coast Park,Do & Outdoors,Coastal park,East Coast,Free,Real place (location approx.),outdoor family dog,,,,"Long coastal park for cycling, BBQ pits and beaches.",1.3008,103.912,east-coast-park
+Pulau Ubin,Do & Outdoors,Island,Changi,Free,Real place (location approx.),outdoor family,,,,"Island reached by bumboat from Changi Point, with cycling trails and the Chek Jawa wetlands.",1.4044,103.9625,pulau-ubin
+Sungei Buloh Wetland Reserve,Do & Outdoors,Wetland reserve,Woodlands,Free,Real place (location approx.),outdoor family,,,,Mangrove and wetland reserve known for migratory shorebirds.,1.4466,103.73,sungei-buloh
+Jurong Lake Gardens,Do & Outdoors,Park,Jurong,Free,Real place (location approx.),outdoor family dog access,,,,Lakeside national gardens with a large nature playground.,1.338,103.729,jurong-lake-gardens
+Coney Island Park,Do & Outdoors,Island park,Punggol,Free,Real place (location approx.),outdoor,,,,"Rustic island park with beaches and trails, linked to Punggol by bridges.",1.4085,103.921,coney-island
+Punggol Waterway Park,Do & Outdoors,Park,Punggol,Free,Real place (location approx.),outdoor family dog access,,,,Waterfront park along the Punggol Waterway.,1.41,103.905,punggol-waterway
+Bishan-Ang Mo Kio Park,Do & Outdoors,Park,Ang Mo Kio & Bishan,Free,Real place (location approx.),outdoor family dog,,,,Large park built around a naturalised river.,1.3627,103.8435,bishan-amk-park
+Labrador Nature Reserve,Do & Outdoors,Nature reserve,Pasir Panjang & Queenstown,Free,Real place (location approx.),outdoor,,,,Coastal reserve with WWII relics and a seaside boardwalk.,1.266,103.8025,labrador
+West Coast Park,Do & Outdoors,Park,Clementi,Free,Real place (location approx.),outdoor family dog,,,,Large park with a big adventure playground.,1.296,103.764,west-coast-park
+Palawan Beach,Do & Outdoors,Beach,Sentosa,Free,Real place (location approx.),outdoor family,,,,Family beach on Sentosa with a suspension bridge to a small islet.,1.2485,103.821,palawan-beach
+Rail Corridor (Bukit Timah Railway Station),Do & Outdoors,Trail,Bukit Timah,Free,Real place (location approx.),outdoor dog family,,,,Long green trail along the former KTM railway line.,1.341,103.7725,rail-corridor
+Fort Canning Park,Do & Outdoors,Park,Civic District,Free,Real place (location approx.),outdoor family dog,,,,Historic hilltop park with gardens and colonial-era landmarks.,1.2948,103.846,fort-canning
+Singapore River cruise,Do & Outdoors,Boat ride,Civic District,'$$,Real place (location approx.),outdoor family date,,,,Bumboat rides along the Singapore River past Boat Quay to Marina Bay.,1.289,103.8465,river-cruise
+Chestnut Nature Park,Do & Outdoors,Nature park,Bukit Batok,Free,Real place (location approx.),outdoor,,,,Nature park with separate hiking and mountain-bike trails.,1.378,103.772,chestnut-np
