@@ -6,7 +6,6 @@ on:
   workflow_dispatch: {}        # "Run workflow" button
   push:
     branches: [main]
-    paths: ["site/**", "data/**", "scripts/**"]
 
 permissions:
   contents: read
@@ -25,6 +24,13 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+      - name: Arrange files into folders
+        run: |
+          mkdir -p site/data data scripts
+          cp index.html site/index.html
+          cp manual_listings.csv data/manual_listings.csv
+          cp events.csv data/events.csv
+          cp build_data.py scripts/build_data.py
       - name: Build data (OpenStreetMap + data.gov.sg + your sheet)
         run: python scripts/build_data.py
       - name: Add Google Maps key (if set)
